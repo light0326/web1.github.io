@@ -1,0 +1,158 @@
+body{
+    background-image:url('./beautiful.jfif') ;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.spin{
+    margin: 0 auto;
+    width: 600px;
+    height: 700px;
+    margin-top: 10px;
+    margin-bottom: 50px;
+    border-radius: 15%;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    padding: 20px;
+    padding-left: 50px;
+    padding-right: 50px;
+    background-image: url('./slot-machine.jfif');
+    background-size: 170% auto;
+    background-position:center;
+    box-sizing: border-box;
+    position: relative;
+}
+.area{
+    flex:1;
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+#lever{
+    width: 30%;
+    height: 50px;
+    font-size: 25pt;
+    border-radius: 80%;
+    background-color: gold;
+    position: absolute;
+    top: 10px;
+    left:76%;
+}
+.slot{
+    background-color: rgb(188, 164, 27);
+    width: 100px;
+    height: 200px;
+    margin: 60px 5px;
+    flex: 1;
+    border:3px solid red;
+    text-align: center;
+    font-size: 50pt;
+    padding-top: 50px;
+    box-sizing: border-box;
+    
+}
+#winnerCash{
+    border: 10px solid red;
+    border-radius:50% 50% 0 0 ;
+    width: 570px;
+    height: 200px;
+    background-color: black;
+    color:yellow;
+    font-size: 50pt;
+    text-align: center;
+    box-sizing: border-box;
+    margin-bottom: 5px;
+    padding-top: 30px;
+}
+.title{
+    margin-bottom: 30px;
+}
+#cash{
+    flex:5;
+    font-size: 12pt;
+    margin-right: 15px;
+}
+#area1{
+    width: 450px;
+    margin-right: 20px;
+}
+#area2{
+    width: 100%;
+    margin-top: 10px;
+    position: relative;
+}
+#dropCash{
+    width: 250px;
+    height: 50px;
+    position: absolute;
+    top:10px;
+    left:-40px;
+    background-color: gold;
+    font-size: 50pt;
+    text-align: center;
+}
+#contlist{
+    width: 350px;
+    height:20px;
+    display:flex;
+    position: sticky;
+    top:0;
+    z-index: 9999;
+    background-Color:gold;
+    margin-left:79%;
+}
+#mainList{
+    font-size:15pt;
+    display:flex;
+    margin-left:auto;
+    width:auto;
+}
+#name{
+    margin-right: 20px;
+    flex:1;
+}
+#logout{
+    display: none;
+    flex:1;
+}
+#login,
+#addCash{
+    flex:1;
+}
+
+#addCashArea,
+#loginArea,
+#signupArea{
+    width: 500px;
+    height: 100px;
+    background-color: gray;
+    position: absolute;
+    line-height: 100px;
+    display: none;
+    text-align: center;
+    font-size: 16pt;
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    
+}
+#loginArea,
+#signupArea{
+    line-height: 30px;
+}
+#loginclosebtn,
+#signupclosebtn {
+    position: absolute;
+    top:0;
+    left:80% ;
+}
+#lbllogin,
+#lblsignup{
+    position: absolute;
+    top:30%;
+    left:10%;
+    font-size: 20pt;
+}

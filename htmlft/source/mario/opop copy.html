@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flying Mario Game</title>
+<style>
+  #container {
+    position: relative;
+    width: 1800px;
+    height: 600px;
+    border: 2px solid black;
+    overflow: hidden; /* 隱藏超出容器的部分 */
+  }
+
+  #plane {
+    position: absolute;
+    width: 50px; /* 設定飛機的寬度 */
+    height: auto; /* 自動調整高度以保持比例 */
+  }
+
+  .coin {
+    position: absolute;
+    width: 50px; /* 金幣的寬度和飛機一致 */
+    height: auto; /* 自動調整高度以保持比例 */
+  }
+
+  #scoreboard {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+<div id="container">
+  <img src="./mario.gif" id="plane">
+</div>
+
+<script>
+  // 定義飛機的起始位置
+  var container = document.getElementById("container");
+  var plane = document.getElementById("plane");
+  var scoreboard = document.getElementById("scoreboard");
+  var x = 0;
+  var y = 0;
+  var speed = 5; // 移動速度
+  var gravity = 0.5; // 重力
+  var velocity = 0; // 初始速度
+  var score = 0; // 初始得分
+  var coins = []; // 存放金幣的數組
+  var direction = "right"; // 初始方向
+  plane.style.left = x + "px";
+  plane.style.top = y + "px";
+
+  // 監聽鍵盤按下事件
+  var keys = {};
+  document.addEventListener("keydown", function(event) {
+    keys[event.key] = true;
+    if (event.key === " ") { // 空白鍵
+      velocity = -10; // 向上的初始速度
+    }
+  });
+
+  // 監聽鍵盤放開事件
+  document.addEventListener("keyup", function(event) {
+    keys[event.key] = false;
+  });
+
+  // 監聽滑鼠點擊事件
+  document.addEventListener("click", function(event) {
+    var rect = container.getBoundingClientRect();
+    var mouseX = event.clientX - rect.left;
+    var mouseY = event.clientY - rect.top;
+    spawnCoin(mouseX, mouseY);
+  });
+
+  // 丟出金幣
+  function spawnCoin(mouseX, mouseY) {
+    var coin = document.createElement("img");
+    coin.src = "./golden coin.png"; // 請確保這個路徑是正確的
+    coin.className = "coin";
+    coin.style.left = x + "px";
+    coin.style.top = y + "px";
+    container.appendChild(coin);
+
+    var angle = Math.atan2(mouseY - y, mouseX - x);
+    var coinSpeed = 10; // 初始速度
+    var coinVelocityX = Math.cos(angle) * coinSpeed;
+    var coinVelocityY = Math.sin(angle) * coinSpeed;
+
+    coins.push({ element: coin, velocityX: coinVelocityX, velocityY: coinVelocityY });
+  }
+
+  // 碰撞檢測
+  function checkCollision(plane, coin) {
+    var planeRect = plane.getBoundingClientRect();
+    var coinRect = coin.getBoundingClientRect();
+
+    return !(
+      planeRect.top > coinRect.bottom ||
+      planeRect.bottom < coinRect.top ||
+      planeRect.left > coinRect.right ||
+      planeRect.right < coinRect.left
+    );
+  }
+
+  // 飛行模擬
+  function fly() {
+    if (keys["w"]) {
+      y -= speed; // 向上移動
+    }
+    if (keys["s"]) {
+      y += speed; // 向下移動
+    }
+    if (keys["a"]) {
+      x -= speed; // 向左移動
+      if (direction !== "left") {
+        plane.style.transform = "scaleX(-1)";
+        direction = "left";
+      }
+    }
+    if (keys["d"]) {
+      x += speed; // 向右移動
+      if (direction !== "right") {
+        plane.style.transform = "scaleX(1)";
+        direction = "right";
+      }
+    }
+
+    // 上下移動受速度影響
+    y += velocity;
+    velocity += gravity;
+
+    // 限制飛機的移動範圍在容器內
+    x = Math.min(Math.max(x, 0), container.clientWidth - plane.clientWidth);
+    y = Math.min(Math.max(y, 0), container.clientHeight - plane.clientHeight);
+
+    plane.style.left = x + "px";
+    plane.style.top = y + "px";
+
+    // 更新金幣位置並檢查碰撞
+    for (var i = 0; i < coins.length; i++) {
+      var coin = coins[i];
+      coin.element.style.left = (parseFloat(coin.element.style.left) + coin.velocityX) + "px";
+      coin.element.style.top = (parseFloat(coin.element.style.top) + coin.velocityY) + "px";
+
+      // 檢查金幣是否碰到邊框
+      var coinX = parseFloat(coin.element.style.left);
+      var coinY = parseFloat(coin.element.style.top);
+      if (coinX < 0 || coinX > container.clientWidth - coin.element.clientWidth || coinY < 0 || coinY > container.clientHeight - coin.element.clientHeight) {
+        container.removeChild(coin.element);
+        coins.splice(i, 1);
+        i--; // 調整索引以正確檢查下個金幣
+        continue;
+      }
+
+    }
+
+    requestAnimationFrame(fly);
+  }
+
+  // 開始遊戲循環
+  requestAnimationFrame(fly);
+</script>
+
+</body>
+</html>

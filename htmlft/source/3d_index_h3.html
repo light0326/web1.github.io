@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D</title>
+    <style>
+        .chart-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .chart-box {
+            border: 1px solid #000000;
+            padding: 10px;
+            height: 400px;
+        }
+    </style>
+    <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+</head>
+<body>
+    <div class="chart-container">
+        <div id="barChart3d" class="chart-box"></div>
+        <div id="pieChart3d" class="chart-box"></div>
+        <div id="waterfallChart3d" class="chart-box"></div>
+        <div id="lineChart3d" class="chart-box"></div>
+        <div id="horizontalWaterfallChart3d" class="chart-box"></div>
+        <div id="areaChart3d" class="chart-box"></div>
+        <div id="columnChart3d" class="chart-box"></div>
+        <div id="areaRangeChart3d" class="chart-box"></div>
+    </div>
+
+    <script>
+        function getRandomData(numPoints, minValue, maxValue) {
+            const data = [];
+            for (let i = 0; i < numPoints; i++) {
+                data.push(Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue);
+            }
+            return data;
+        }
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function createBarChart() {
+            const data = {
+                type: 'bar3d',
+                series: [
+                    {
+                        values: getRandomData(6, 10, 100),
+                        text: 'Data',
+                        'background-color': getRandomColor()
+                    }
+                ],
+                title: {
+                    text: '柱狀圖'
+                },
+                scaleX: {
+                    values: ['110', '111', '112', '113', '114', '115']
+                },
+                scaleY: {
+                    title: {
+                        text: 'Values'
+                    }
+                }
+            };
+
+            zingchart.render({
+                id: 'barChart3d',
+                data: data,
+                height: 400,
+                width: '100%'
+            });
+        }
+
+        function createPieChart() {
+            const data = {
+                type: 'pie3d',
+                series: getRandomData(4, 1, 20).map((value, index) => ({
+                    values: [value],
+                    text: ['110', '111', '112', '113'][index],
+                    'background-color': getRandomColor()
+                })),
+                title: {
+                    text: '圓餅圖'
+                }
+            };
+
+            zingchart.render({
+                id: 'pieChart3d',
+                data: data,
+                height: 400,
+                width: '100%'
+            });
+        }
+
+        function createWaterfallChart() {
+            const data = {
+                type: 'waterfall3d',
+                series: [
+                    {
+                        values: getRandomData(6, 10, 100),
+                        text: 'Data',
+                        'background-color': getRandomColor()
+                    }
+                ],
+                title: {
+                    text: '瀑布圖'
+                },
+                scaleX: {
+                    values: ['110', '111', '112', '113', '114', '115', '116']
+                },
+                scaleY: {
+                    title: {
+                        text: 'Values'
+                    }
+                },
+                scaleZ: {
+                    values: [0, 0, 0, 0, 0, 0], // 瀑布圖的Z軸值
+                    title: {
+                        text: 'Z 軸'
+                    }
+                }
+            };
+
+            zingchart.render({
+                id: 'waterfallChart3d',
+                data: data,
+                height: 400,
+                width: '100%'
+            });
+        }
+
+        function createLineChart() {
+            const data = getRandomData(4, 10, 100);
+
+            const chartData = {
+                type: 'line3d',
+                series: [{
+                    values: data,
+                    text: 'Values',
+                    'background-color': getRandomColor()
+                }],
+                title: {
+                    text: ' 折線圖'
+                },
+                scaleX: {
+                    values: ['110', '111', '112', '113', '114'],
+                    title: {
+                        text: '類別'
+                    }
+                },
+                scaleY: {
+                    title: {
+                        text: '值'
+                    }
+                },
+                scaleZ: {
+                    values: data.map(value => value + 10),
+                    title: {
+                        text: '高度'
+                    }
+                }
+            };
+
+            zingchart.render({
+                id: 'lineChart3d',
+                data: chartData,
+                height: 400,
+                width: '100%'
+            });
+        }
+
+        function createHorizontalWaterfallChart() {
+            const data = {
+                type: 'hwaterfall3d',
+                series: [
+                    {
+                        values: getRandomData(6, 10, 100),
+                        text: 'Data',
+                        'background-color': getRandomColor()
+                    }
+                ],
+                title: {
+                    text: '水平瀑布圖'
+                },
+                scaleX: {
+                    values: [0, 0, 0, 0, 0, 0],
+                    title: {
+                        text: 'X 軸'
+                    }
+                },
+                scaleY: {
+                    title: {
+                        text: 'Values'
+                    }
+                },
+                scaleZ: {
+                    values: ['110', '111', '112', '113', '114', '115', '116'],
+                    title: {
+                        text: '類別'
+                    }
+                }
+            };
+
+            zingchart.render({
+                id: 'horizontalWaterfallChart3d',
+                data: data,
+                height: 400,
+                width: '100%'
+            });
+        }
+
+        function createAreaChart() {
+            const data = getRandomData(4, 10, 100);
+
+            const chartData = {
+                type: 'area3d',
+                series: [{
+                    values: data,
+                    'background-color': getRandomColor()
+                }],
+                title: {
+                    text: ' 面積圖'
+                },
+                scaleX: {
+                    values: ['110', '111', '112', '113', '114'],
+                    title: {
+                        text: '類別'
+                    }
+                },
+                scaleY: {
+                    title: {
+                        text: '值'
+                    }
+                },
+                scaleZ: {
+                    values: data.map(value => value + 10),
+                    title: {
+                        text: '高度'
+                    }
+                }
+            };
+
+            zingchart.render({
+                id: 'areaChart3d',
+                data: chartData,
+                height: 400,
+                width: '100%'
+            });
+        }
+
+        function createHorizontalBarChart() {
+            const data = getRandomData(4, 10, 100);
+
+            const chartData = {
+                type: 'hbar3d',
+                series: [{
+                    values: data,
+                    'background-color': getRandomColor()
+                }],
+                title: {
+                    text: '水平長條圖'
+                },
+                scaleX: {
+                    title: {
+                        text: '值'
+                    }
+                },
+                scaleY: {
+                    values: ['110', '111', '112', '113', '114'],
+                    title: {
+                        text: '類別'
+                    }
+                },
+                scaleZ: {
+                    values: data.map(value => value + 10),
+                    title: {
+                        text: '高度'
+                    }
+                }
+            };
+
+            zingchart.render({
+                id: 'columnChart3d',
+                data: chartData,
+                height: 400,
+                width: '100%'
+            });
+        }
+
+        function createAreaRangeChart() {
+            const data = getRandomData(4, 10, 100);
+            const lowData = getRandomData(4, 0, 50);
+
+            const chartData = {
+                type: 'area3d',
+                series: [{
+                    values: lowData,
+                    text: 'Low',
+                    'background-color': getRandomColor()
+                }, {
+                    values: data,
+                    text: 'High',
+                    'background-color': getRandomColor()
+                }],
+                title: {
+                    text: '區域圖'
+                },
+                scaleX: {
+                    values: ['110', '111', '112', '113'],
+                    title: {
+                        text: '類別'
+                    }
+                },
+                scaleY: {
+                    title: {
+                        text: '值'
+                    }
+                },
+                scaleZ: {
+                    values: data.map(value => value + 10),
+                    title: {
+                        text: '高度'
+                    }
+                }
+            };
+
+            zingchart.render({
+                id: 'areaRangeChart3d',
+                data: chartData,
+                height: 400,
+                width: '100%'
+            });
+        }
+
+        function updateChartData() {
+            setInterval(() => {
+                createBarChart();
+            }, 1000);
+
+            setInterval(() => {
+                createPieChart();
+            }, 2000);
+
+            setInterval(() => {
+                createWaterfallChart();
+            }, 3000);
+
+            setInterval(() => {
+                createLineChart();
+            }, 4000);
+
+            setInterval(() => {
+                createHorizontalWaterfallChart();
+            }, 5000);
+
+            setInterval(() => {
+                createAreaChart();
+            }, 6000);
+
+            setInterval(() => {
+                createHorizontalBarChart();
+            }, 7000);
+
+            setInterval(() => {
+                createAreaRangeChart();
+            }, 8000);
+        }
+
+        updateChartData();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,97 @@
+.contactme-wrap{
+    width: 100%;
+    margin:0px auto;
+}
+.contactme-container{
+    display:grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 30px;
+ 
+    border-color: rgb(80, 79, 78);
+}
+.contactme-container{
+    width: 80%;
+    margin:auto;
+
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    grid-row: 1fr;
+    gap:60px;
+}
+.contactme-container .contactme-info{
+    font-size: 1.2rem;
+    line-height: 2rem;
+    color:rgb(54, 52, 52);
+    padding:20px;
+    border: 1px solid #ccc;
+    margin-top:30px;
+    margin-bottom:30px;
+    box-shadow: 10px 10px 5px 5px #ccc;
+}
+.contactme-container .contactme-info p{
+    margin-bottom: 20px;
+}
+.contactme-container .contactme-info h2{
+    margin-top:30px;
+    margin-bottom: 20px;
+    text-align:center;
+    color:#4e4a4a
+}
+.contactme-container .contactme-form{
+    font-family: 微軟正黑體;
+    font-size: 1.8rem;
+    line-height: 1.6rem;
+    color:rgb(54, 52, 52);
+    padding:20px;
+    border: 1px solid #ccc;
+    margin-top:30px;
+    margin-bottom:30px;
+}
+.contactme-container .contactme-form p{
+    margin-bottom: 20px;;
+}
+.contactme-form input[type="text"] ,.contactme-form input[type="email"] ,  .contactme-form select{
+    font-size:1.8rem;
+    width: 98%;
+
+    margin-top:10px;
+    margin-bottom:10px;
+    padding:5px;
+
+}
+.contactme-form textarea{
+    font-size:2rem;
+    width: 98%;
+    margin-top:10px;
+    margin-bottom:10px;
+    padding:5px;
+}
+.contactme-container .contactme-form h2{
+    font-size: 1.8rem;
+    margin-top:30px;
+    margin-bottom: 20px;
+    text-align:center;
+    color:#4e4a4a;
+}
+.contactme-container .contactme-form input[type=radio]{
+    margin-left: 40px;
+    margin-right:10px;
+    width: 20px;
+    height: 20px;
+    margin-top: 15px;
+}
+.need{
+    font-size: 0.8rem;
+    color:red;
+    font-weight: 600;
+}
+.contactme-form input[type="submit"]{
+ margin-left:45%;
+ background-color: orange;
+ font-size: 1.8rem;
+  padding: 10px;
+   width: 120px;
+   line-height: 40px;
+   border-radius: 10px;
+}

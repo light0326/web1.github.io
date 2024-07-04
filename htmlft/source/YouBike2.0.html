@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YouBike2.0 臺北市公共自行車即時資訊</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #d8acfc;
+      }
+
+      h1 {
+        text-align: center;
+      }
+
+      form {
+        text-align: center;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0 auto;
+        background-color: #a9a9a9;
+        border-radius: 20px;
+      }
+      
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+        border: 1px solid #282828;
+        text-align: center;
+      }
+
+      th {
+        background-color: #a9a9a9;
+        text-align: center;
+      }
+
+      .zero {
+        color: red;
+        font-size: large;
+      }
+
+      @media (max-width: 600px) {
+        th,
+        td {
+          font-size: 12px;
+          padding: 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>YouBike2.0 臺北市公共自行車即時資訊</h1>
+
+    <form>
+      <label for="districtSelect">選擇區域：</label>
+      <select
+        id="districtSelect"
+        name="districtSelect"
+        onchange="getYouBikeInfo()"
+      >
+        <option value="">--選擇區域--</option>
+        <option value="中正區">中正區</option>
+        <option value="大同區">大同區</option>
+        <option value="中山區">中山區</option>
+        <option value="松山區">松山區</option>
+        <option value="大安區">大安區</option>
+        <option value="萬華區">萬華區</option>
+        <option value="信義區">信義區</option>
+        <option value="士林區">士林區</option>
+        <option value="北投區">北投區</option>
+        <option value="內湖區">內湖區</option>
+        <option value="南港區">南港區</option>
+        <option value="文山區">文山區</option>
+      </select>
+    </form>
+
+    <table id="bikeTable">
+      <thead>
+        <tr>
+          <th>站點名稱</th>
+          <th>可借自行車數量</th>
+          <th>可停車位數量</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <script>
+      const url =
+        "https://tcgbusfs.blob.core.windows.net/blobyoubike/YouBikeTP.json";
+
+      function getYouBikeInfo() {
+        const district = document.getElementById("districtSelect").value;
+        fetch(url)
+          .then((response) => response.json())
+          .then((result) => {
+            const bikeTableBody = document
+              .getElementById("bikeTable")
+              .getElementsByTagName("tbody")[0];
+            bikeTableBody.innerHTML = "";
+
+            if (district) {
+              const data = result.retVal;
+              for (const key in data) {
+                const station = data[key];
+                if (station.sarea === district) {
+                  const row = bikeTableBody.insertRow();
+                  const nameCell = row.insertCell(0);
+                  const bikeCell = row.insertCell(1);
+                  const parkCell = row.insertCell(2);
+
+                  nameCell.textContent = station.sna;
+                  bikeCell.textContent = station.sbi;
+                  parkCell.textContent = station.bemp;
+
+                  if (station.sbi == 0) {
+                    bikeCell.classList.add("zero");
+                  }
+
+                  if (station.bemp == 0) {
+                    parkCell.classList.add("zero");
+                  }
+                }
+              }
+            }
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+    </script>
+  </body>
+</html>

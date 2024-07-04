@@ -1,0 +1,44 @@
+.news-wrap {
+    width: 70%;
+    margin: 30px auto;
+    background-color: rgb(255, 255, 255);
+}
+
+.news-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 20px;
+}
+
+.news-items {
+    border: 1px solid rgb(69, 69, 69);
+    padding: 10px;
+}
+
+.news-title {
+    font-size: 1.2rem;
+    font-weight: 800;
+    line-height: 4rem;
+}
+.news-detail{
+    line-height: 1.8rem;
+    color: rgb(15, 7, 15);
+}
+.news-footer{
+    background-color: rgb(217, 250, 212);
+    overflow: hidden;
+    padding: 5px;
+}
+.news-date{
+    font-size: 0.8rem;
+    float: left;
+    color: rgb(0, 0, 0);
+    margin-top: 15px;
+}
+.more{
+    float: right;
+    background-color: red;
+    color: white;
+    padding: 10px;
+}

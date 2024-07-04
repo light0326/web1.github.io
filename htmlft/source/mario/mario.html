@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"
+        integrity="sha512-nNOFtIS+H0lwgdUDaPn/g1ssw3uN9AkEM7zy2wLaTQeLQNeNiitUcLpEpDIh3Z4T22MdeTNru/SQbNM4ig2rng=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <link rel="stylesheet" href="./mario.css">
+    <title>Mario Animation</title>
+    
+</head>
+
+<body>
+    <div class="main">
+        <div id="g1" class="grid">
+            <img id="gif1" src="./mario_s.png">
+            <script>
+                function runMario(element, interval, distance, resetPosition) {
+                    element.style.left = `${resetPosition}px`;
+                    let position = resetPosition;
+                    setInterval(() => {
+                        position += distance;
+                        element.style.left = `${position}px`;
+                        if (position >= 315) {
+                            position = resetPosition;
+                        }
+                    }, interval);
+                }
+
+                runMario(document.getElementById('gif1'), 50, 5, -100);
+            </script>
+        </div>
+        <div id="g2" class="grid">
+            <img id="gif2" src="./mario.gif">
+            <script>
+                runMario(document.getElementById('gif2'), 50, 5, -100);
+            </script>
+        </div>
+        <div id="g3" class="grid">
+            <img id="gif3" src="./mario.gif">
+            <script>
+                const gif3 = document.getElementById('gif3');
+
+                function runMarioWithJump(element) {
+                    let position = -100;
+                    let jumpInterval;
+                    let isJumping = false;
+
+                    element.style.left = `${position}px`;
+
+                    setInterval(() => {
+                        position += 5;
+                        element.style.left = `${position}px`;
+                        if (position >= 315) {
+                            position = -100;
+                        }
+                    }, 50);
+
+                    document.addEventListener('keydown', (e) => {
+                        if (!isJumping && e.code === 'Space') {
+                            isJumping = true;
+                            let min = 210;
+                            let jump = -25;
+                            element.src = './mario_s.png';
+
+                            jumpInterval = setInterval(() => {
+                                min += jump;
+                                element.style.top = `${min}px`;
+
+                                if (min <= 160) {
+                                    jump = 25;
+                                } else if (min >= 210) {
+                                    clearInterval(jumpInterval);
+                                    isJumping = false;
+                                    element.style.top = '210px';
+                                    element.src = './mario.gif';
+                                }
+                            }, 100);
+                        }
+                    });
+                }
+
+                runMarioWithJump(gif3);
+            </script>
+        </div>
+        <div id="g4" class="grid">
+            <img id="gif4" src="./mario.gif">
+            <script>
+                const gif4 = document.getElementById('gif4');
+
+                function runMarioWithDoubleJump(element) {
+                    let position = -100;
+                    let jumpInterval;
+                    let jumpCount = 0;
+                    const maxJumps = 2;
+                    const groundLevel = 210;
+
+                    element.style.left = `${position}px`;
+
+                    setInterval(() => {
+                        position += 5;
+                        element.style.left = `${position}px`;
+                        if (position >= 250) {
+                            position = -100;
+                        }
+                    }, 50);
+
+                    document.addEventListener('keydown', (event) => {
+                        if (event.code === 'Space' && jumpCount < maxJumps) {
+                            if (jumpCount === 0) {
+                                initiateJump();
+                            } else if (jumpCount === 1) {
+                                initiateDoubleJump();
+                            }
+                            jumpCount++;
+                        }
+                    });
+
+                    function initiateJump() {
+                        let min = groundLevel;
+                        let jump = -25;
+                        element.src = './mario_s.png';
+
+                        jumpInterval = setInterval(() => {
+                            min += jump;
+                            element.style.top = `${min}px`;
+
+                            if (min <= 160) {
+                                jump = 25;
+                            } else if (min >= groundLevel) {
+                                clearInterval(jumpInterval);
+                                jumpCount = 0;
+                                element.style.top = `${groundLevel}px`;
+                                element.src = './mario.gif';
+                            }
+                        }, 100);
+                    }
+
+                    function initiateDoubleJump() {
+                        clearInterval(jumpInterval);
+                        let min = parseInt(element.style.top, 10);
+                        let jump = -25;
+                        element.src = './mario_s.png';
+
+                        jumpInterval = setInterval(() => {
+                            position += 10;
+                            min += jump;
+                            element.style.left = `${position}px`;
+                            element.style.top = `${min}px`;
+
+                            if (min <= 110) {
+                                jump = 25;
+                            } else if (min >= groundLevel) {
+                                clearInterval(jumpInterval);
+                                jumpCount = 0;
+                                element.style.top = `${groundLevel}px`;
+                                element.src = './mario.gif';
+                            }
+                        }, 100);
+                    }
+                }
+
+                runMarioWithDoubleJump(gif4);
+            </script>
+        </div>
+        <div id="g5" class="grid">
+            <img id="ladder" src="./ladder.png">
+            <img id="gif5" src="mario.gif">
+            <script>
+                // Function to handle climbing animation
+                function runMarioWithClimb(element) {
+                    let position = -100;
+                    let isClimbing = false;
+                    const groundLevel = 210;
+                    const stopPosition = 140;
+                    const climbHeight = 80;
+                    const normalSrc = './mario.gif';
+                    const climbSrc = './mario_c.webp';
+                    element.style.left = `${position}px`;
+
+                    const moveInterval = setInterval(() => {
+                        if (!isClimbing) {
+                            position += 5;
+                            element.style.left = `${position}px`;
+                            if (position >= 315) {
+                                position = -100;
+                            } else if (position >= stopPosition && !isClimbing) {
+                                isClimbing = true;
+                                clearInterval(moveInterval);
+                                initiateClimb();
+                            }
+                        }
+                    }, 50);
+
+                    function initiateClimb() {
+                        element.src = climbSrc;
+                        element.style.width = "20%";
+                        element.style.height = "20%";
+                        let min = groundLevel;
+                        let climb = -5;
+
+                        const climbUpInterval = setInterval(() => {
+                            min += climb;
+                            element.style.top = `${min}px`;
+
+                            if (min <= climbHeight) {
+                                clearInterval(climbUpInterval);
+                                element.style.width = "40%";
+                                element.style.height = "40%";
+                                element.src = normalSrc;
+                                fallToGround();
+                            }
+                        }, 50);
+                    }
+
+                    function fallToGround() {
+                        let min = climbHeight;
+                        let fall = 5;
+                        position += 10;
+                        const fallInterval = setInterval(() => {
+                            position += 5;
+                            min += fall;
+                            element.style.left = `${position}px`;
+                            element.style.top = `${min}px`;
+
+                            if (min >= groundLevel) {
+                                clearInterval(fallInterval);
+                                element.style.top = `${groundLevel}px`;
+                                element.src = normalSrc;
+                                isClimbing = false;
+                                continueMoveRight();
+                            }
+                        }, 50);
+                    }
+
+                    function continueMoveRight() {
+                        const moveRightInterval = setInterval(() => {
+                            position += 5;
+                            element.style.left = `${position}px`;
+
+                            if (!isClimbing && position >= 315) {
+                                clearInterval(moveRightInterval);
+                                position = -100;
+                                runMarioWithClimb(element);
+                            }
+                        }, 50);
+                    }
+                }
+
+                runMarioWithClimb(document.getElementById('gif5'));
+            </script>
+        </div>
+        <div id="g6" class="grid">
+            <img src="./mario.gif" id="gif6">
+            <img id="ladder_g6" src="./ladder.png">
+            <script>
+                const gif6 = document.getElementById('gif6');
+                const ladder_g6 = document.getElementById('ladder_g6');
+                let positionX = 0;
+                let positionY = 210;
+                let onPipe = false;
+                let isJumping = false;
+                let isClimbing = false;
+                let isRunning = false;
+                let jumpCount = 0;
+                function wall(x) {
+                    return (x > 0) ? 250 : -40;
+                }
+                function groundLevel() {
+                    return (positionX > 110 && positionX < 200 && positionY > 72) ? 72 : 210;
+                }
+
+                // 重設馬力歐位置
+                function resetMario() {
+                    gif6.style.left = `${positionX}px`;
+                    gif6.style.top = `${positionY}px`;
+                    gif6.src = './mario.gif';
+                }
+
+                // 移動馬力歐
+                function moveMario(dx, dy, t) {
+                    console.log(dx, dy, positionX)
+                    if (positionX == 110 && positionY <= 210 && positionY > 72 && dx > 0 || positionX == 200 && positionY <= 210 && positionY > 72 && dx < 0 || positionX == wall(dx)) { } else {
+                        if (positionX == 110 && positionY <= 72 && dx < 0 || positionX == 200 && positionY <= 72 && dx > 0) {//在水管上
+                            gif6.style.transform = `scaleX(${t})`;
+                            positionX += dx;
+                            const fallInterval = setInterval(() => {
+                                positionY += 5;
+                                gif6.style.top = `${positionY}px`;
+                                if (positionY >= 210) {
+                                    positionY = 210;
+                                    clearInterval(fallInterval)
+                                }
+                            }, 50)
+                            gif6.style.left = `${positionX}px`;
+                            gif6.style.width = "40%";
+                            gif6.style.height = "40%";
+                            isRunning = false;
+                        } else {
+                            gif6.style.transform = `scaleX(${t})`;
+                            positionX += dx;
+                            positionY += dy;
+                            gif6.style.width = "40%";
+                            gif6.style.height = "40%";
+                            gif6.style.left = `${positionX}px`;
+                            gif6.style.top = `${positionY}px`;
+                            isRunning = false;
+                        }
+                    }
+                    isRunning = false;
+                }
+
+                document.addEventListener('keydown', (e) => {
+                    if (isJumping || isClimbing || isRunning) return;
+
+                    switch (e.code) {
+                        case 'KeyD':
+                            isRunning = true;
+                            gif6.src = './mario.gif';
+                            moveMario(10, 0, 1); // 向右移動
+                            break;
+                        case 'KeyA':
+                            isRunning = true;
+                            gif6.src = './mario.gif';
+                            moveMario(-10, 0, -1); // 向左移動
+                            break;
+                        case 'KeyW':
+                            if (positionX >= 110 && positionX <= 120 && positionY == groundLevel() || positionX <= 220 && positionX >= 190 && positionY == groundLevel()) {
+                                isClimbing = true;
+                                onPipe = true;
+                                climbMario(-100); // 向上爬
+                            }
+                            break;
+                        case 'KeyS':
+                            if (positionX >= 110 && positionX <= 120 && positionY < groundLevel() || positionX <= 220 && positionX >= 199 && positionY < groundLevel()) {
+                                isClimbing = true;
+                                onPipe = false;
+                                positionY += 40;
+                                climbMario(100); // 向下爬
+                            }
+                            break;
+                        case 'Space':
+                            if (jumpCount < 2) {
+                                isJumping = true;
+                                jumpMario();
+                                jumpCount++;
+                            }
+                            break;
+                    }
+                });
+
+                document.addEventListener('keyup', (e) => {
+                    if (e.code === 'Space') {
+                        jumpCount = 0;
+                    }
+                });
+
+                // 馬力歐跳躍
+                function jumpMario() {
+                    gif6.src = './mario_s.png';
+                    let min = positionY;
+                    let jump = -25;
+                    const jumpInterval = setInterval(() => {
+                        positionY += jump;
+                        if (!(positionX == 110 && positionY <= 210 && positionY > 72 || positionX == 200 && positionY <= 210 && positionY > 72)) {
+                            positionX += (gif6.style.transform == 'scaleX(1)') ? 10 : -10;
+                        }
+                        gif6.style.top = `${positionY}px`;
+                        gif6.style.left = `${positionX}px`;
+                        console.log(groundLevel())
+                        if (positionY <= min - 50) {
+                            jump = 25;
+                            return;
+                        }
+                        if (positionY >= groundLevel()) {
+                            clearInterval(jumpInterval);
+                            positionY = groundLevel();
+                            isJumping = false;
+                            resetMario();
+                            return;
+                        }
+
+                    }, 100);
+                }
+
+                // 馬力歐爬管子
+                function climbMario(dy) {
+                    gif6.src = './mario_c.webp';
+                    gif6.style.left = `${positionX + 40}px`;
+                    gif6.style.width = "20%";
+                    gif6.style.height = "20%";
+                    if (positionX <= 220 && positionX >= 190) {
+                        gif6.style.transform = 'scaleX(-1)';
+                    } else {
+                        gif6.style.transform = 'scaleX(1)';
+                    }
+                    let min = positionY;
+                    const climbInterval = setInterval(() => {
+                        min += dy > 0 ? 5 : -5;
+                        gif6.style.top = `${min}px`;
+                        if ((dy > 0 && min >= positionY + (dy + 50)) || (dy < 0 && min <= positionY + (dy))) {
+                            gif6.style.transform = 'scaleX(1)';
+                            clearInterval(climbInterval);
+                            isClimbing = false;
+                            min += positionY >= 110 ? -38 : 38;
+                            gif6.style.left = `${positionX - 40}px`;
+                            positionY = min;
+                            if (dy > 0) {
+                                positionY = 210;
+                            }
+                            console.log(positionY);
+                            gif6.style.width = "40%";
+                            gif6.style.height = "40%";
+                            resetMario();
+                        }
+                    }, 50);
+                }
+
+                resetMario();
+            </script>
+        </div>
+        <div id="g7" class="grid">
+            <img src="./mario.gif" id="plane7">
+            <div id="scoreboard7">Score: 0</div>
+
+            <script>
+                var g7_container = document.getElementById("g7");
+                var g7_plane = document.getElementById("plane7");
+                var g7_scoreboard = document.getElementById("scoreboard7");
+                var g7_x = 200;
+                var g7_y = 0;
+                var g7_speed = 5;
+                var g7_gravity = 0.5;
+                var g7_velocity = 0;
+                var g7_score = 0;
+                var g7_coins = [];
+                g7_plane.style.left = g7_x + "px";
+                g7_plane.style.top = g7_y + "px";
+                var g7_facingLeft = false;
+
+                var g7_keys = {};
+                document.addEventListener("keydown", function (event) {
+                    g7_keys[event.key] = true;
+                    if (event.key === " ") {
+                        g7_velocity = -10;
+                    }
+                });
+
+                document.addEventListener("keyup", function (event) {
+                    g7_keys[event.key] = false;
+                });
+
+                function g7_spawnCoin() {
+                    if (g7_coins.length < 10) {
+                        var coin = document.createElement("img");
+                        coin.src = "./golden coin.png";
+                        coin.className = "coin";
+                        coin.style.left = Math.random() * (g7_container.clientWidth - 50) + "px";
+                        coin.style.top = Math.random() * (g7_container.clientHeight - 50) + "px";
+                        g7_container.appendChild(coin);
+                        g7_coins.push(coin);
+                    }
+                }
+
+                function g7_checkCollision(plane, coin) {
+                    var planeRect = plane.getBoundingClientRect();
+                    var coinRect = coin.getBoundingClientRect();
+
+                    return !(
+                        planeRect.top > coinRect.bottom ||
+                        planeRect.bottom < coinRect.top ||
+                        planeRect.left > coinRect.right ||
+                        planeRect.right < coinRect.left
+                    );
+                }
+
+                function g7_fly() {
+                    if (g7_keys["w"]) {
+                        g7_y -= g7_speed;
+                    }
+                    if (g7_keys["s"]) {
+                        g7_y += g7_speed;
+                    }
+                    if (g7_keys["a"]) {
+                        g7_x -= g7_speed;
+                        if (!g7_facingLeft) {
+                            g7_plane.style.transform = "scaleX(-1)";
+                            g7_facingLeft = true;
+                        }
+                    }
+                    if (g7_keys["d"]) {
+                        g7_x += g7_speed;
+                        if (g7_facingLeft) {
+                            g7_plane.style.transform = "scaleX(1)";
+                            g7_facingLeft = false;
+                        }
+                    }
+
+                    g7_y += g7_velocity;
+                    g7_velocity += g7_gravity;
+
+                    g7_x = Math.min(Math.max(g7_x, 0), g7_container.clientWidth - g7_plane.clientWidth);
+                    g7_y = Math.min(Math.max(g7_y, 0), g7_container.clientHeight - g7_plane.clientHeight);
+
+                    g7_plane.style.left = g7_x + "px";
+                    g7_plane.style.top = g7_y + "px";
+
+                    for (var i = 0; i < g7_coins.length; i++) {
+                        if (g7_checkCollision(g7_plane, g7_coins[i])) {
+                            g7_container.removeChild(g7_coins[i]);
+                            g7_coins.splice(i, 1);
+                            g7_score += 1;
+                            g7_scoreboard.innerText = "Score: " + g7_score;
+                            i--;
+                        }
+                    }
+
+                    requestAnimationFrame(g7_fly);
+                }
+
+                requestAnimationFrame(g7_fly);
+
+                setInterval(g7_spawnCoin, 500);
+            </script>
+        </div>
+        <div id="g8" class="grid">
+            <img src="./mario.gif" id="plane8">
+            <label for="text">左鍵丟幣</label>
+            <script>
+                var g8_container = document.getElementById("g8");
+                var g8_plane = document.getElementById("plane8");
+                var g8_scoreboard = document.createElement("div");
+                var g8_x = 200;
+                var g8_y = 0;
+                var g8_speed = 5;
+                var g8_gravity = 0.5;
+                var g8_velocity = 0;
+                var g8_score = 0;
+                var g8_coins = [];
+                var g8_direction = "right";
+                g8_plane.style.left = g8_x + "px";
+                g8_plane.style.top = g8_y + "px";
+
+                var g8_keys = {};
+                document.addEventListener("keydown", function (event) {
+                    g8_keys[event.key] = true;
+                    if (event.key === " ") {
+                        g8_velocity = -10;
+                    }
+                });
+
+                document.addEventListener("keyup", function (event) {
+                    g8_keys[event.key] = false;
+                });
+
+                document.addEventListener("click", function (event) {
+                    var rect = g8_container.getBoundingClientRect();
+                    var mouseX = event.clientX - rect.left;
+                    var mouseY = event.clientY - rect.top;
+                    g8_spawnCoin(mouseX, mouseY);
+                });
+
+                function g8_spawnCoin(mouseX, mouseY) {
+                    var coin = document.createElement("img");
+                    coin.src = "./golden coin.png";
+                    coin.className = "coin8";
+                    coin.style.left = g8_x + "px";
+                    coin.style.top = g8_y + "px";
+                    g8_container.appendChild(coin);
+
+                    var angle = Math.atan2(mouseY - g8_y, mouseX - g8_x);
+                    var coinSpeed = 10;
+                    var coinVelocityX = Math.cos(angle) * coinSpeed;
+                    var coinVelocityY = Math.sin(angle) * coinSpeed;
+
+                    g8_coins.push({ element: coin, velocityX: coinVelocityX, velocityY: coinVelocityY });
+                }
+
+                function g8_checkCollision(plane, coin) {
+                    var planeRect = plane.getBoundingClientRect();
+                    var coinRect = coin.getBoundingClientRect();
+
+                    return !(
+                        planeRect.top > coinRect.bottom ||
+                        planeRect.bottom < coinRect.top ||
+                        planeRect.left > coinRect.right ||
+                        planeRect.right < coinRect.left
+                    );
+                }
+
+                function g8_fly() {
+                    if (g8_keys["w"]) {
+                        g8_y -= g8_speed;
+                    }
+                    if (g8_keys["s"]) {
+                        g8_y += g8_speed;
+                    }
+                    if (g8_keys["a"]) {
+                        g8_x -= g8_speed;
+                        if (g8_direction !== "left") {
+                            g8_plane.style.transform = "scaleX(-1)";
+                            g8_direction = "left";
+                        }
+                    }
+                    if (g8_keys["d"]) {
+                        g8_x += g8_speed;
+                        if (g8_direction !== "right") {
+                            g8_plane.style.transform = "scaleX(1)";
+                            g8_direction = "right";
+                        }
+                    }
+
+                    g8_y += g8_velocity;
+                    g8_velocity += g8_gravity;
+
+                    g8_x = Math.min(Math.max(g8_x, 0), g8_container.clientWidth - g8_plane.clientWidth);
+                    g8_y = Math.min(Math.max(g8_y, 0), g8_container.clientHeight - g8_plane.clientHeight);
+
+                    g8_plane.style.left = g8_x + "px";
+                    g8_plane.style.top = g8_y + "px";
+
+                    for (var i = 0; i < g8_coins.length; i++) {
+                        var coin = g8_coins[i];
+                        coin.element.style.left = (parseFloat(coin.element.style.left) + coin.velocityX) + "px";
+                        coin.element.style.top = (parseFloat(coin.element.style.top) + coin.velocityY) + "px";
+
+                        var coinX = parseFloat(coin.element.style.left);
+                        var coinY = parseFloat(coin.element.style.top);
+                        if (coinX < 0 || coinX > g8_container.clientWidth - coin.element.clientWidth || coinY < 0 || coinY > g8_container.clientHeight - coin.element.clientHeight) {
+                            g8_container.removeChild(coin.element);
+                            g8_coins.splice(i, 1);
+                            i--;
+                            continue;
+                        }
+                    }
+
+                    requestAnimationFrame(g8_fly);
+                }
+
+                requestAnimationFrame(g8_fly);
+            </script>
+        </div>
+    </div>
+</body>
+
+</html>

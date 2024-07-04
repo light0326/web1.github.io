@@ -1,0 +1,52 @@
+* {
+    padding: 0px;
+    margin: 0px;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    color: #343a40;
+}
+
+.header {
+    background-color: #ebff0f;
+    color: rgb(0, 0, 0);
+    padding: 1rem;
+    border-radius: 2rem;
+}
+
+.header h1 {
+    font-size: 4rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+
+.col-md-9 {
+    background-color: rgb(229, 197, 155);
+}
+
+.shoppingcarlist-mb-4 {
+    background-color: red;
+}
+
+.card {
+    background-color: #d2d2d1;
+}
+
+.card img {
+    height: 100px;
+    object-fit: cover;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.list-group-item {
+    cursor: pointer;
+    text-align: center;
+}
+
+.list-group-item:hover {
+    background-color: #59ff00;
+}

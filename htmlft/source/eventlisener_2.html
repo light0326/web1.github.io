@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <title>Document</title>
+    <style>
+        .main{
+            display: flex;
+            flex-wrap: wrap;
+            height: 600px;
+        }
+        .grid{
+            width: 24.7%;
+            height: 300px;
+            border: 1px solid black;
+            position: relative;
+        }
+        .dot {
+            position: absolute;
+            width: 20px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: red;
+            z-index: 1px;
+        }
+        .face {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            background-color: #ffcc00;
+            border-radius: 50%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: auto;
+            top:10px;
+        }
+        
+        .eye {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .pupil {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: black;
+            border-radius: 50%;
+        }
+        button{
+            position: absolute;
+            z-index: 99999999px;
+        }
+        #Pen{
+            top:0;
+            left:80%;
+        }
+        #eraser{
+            top:40px;
+            left:80%;
+        }
+        #Pen1{
+            top:0;
+            left:80%;
+        }
+        #eraser1{
+            top:40px;
+            left:80%;
+        }
+        #g4 {
+            -webkit-user-select: none; /* Safari */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Standard */
+        }
+        #g2 {
+            -webkit-user-select: none; /* Safari */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Standard */
+        }
+        #textArea {
+            width: 300px;
+            height: 100px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            position: relative;
+            overflow: hidden;
+        }
+        .magnifier {
+            position: fixed; /* Use fixed positioning */
+            border: 3px solid #000;
+            border-radius: 50%;
+            cursor: none;
+            width: 150px;
+            height:150px;
+            display: none;
+            z-index: 10;
+            overflow: hidden;
+            pointer-events: none; /* Ensure it does not block mouse events */
+        }
+        .magnifier img {
+            position: absolute;
+            width: 400%;
+            height: 400%;
+        }
+        .magnifier2 {
+            position: absolute;
+            border: 2px solid black;
+            border-radius: 50%;
+            overflow: hidden;
+            width: 150px;
+            height: 150px;
+            display: none;
+            pointer-events: none;
+            background-color: white;
+        }
+    
+        .magnifier2 img {
+            position: absolute;
+        }
+        #g8{
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .clr{
+            width: 33.3%;
+            height: 33.5%;
+            box-sizing: border-box;
+            border:1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <div class="main" id="main">
+        <div id="g1" class="grid">
+            <p>抓Event部分參數顯示</p>
+            <p id="g1p1"></p>
+            <p id="g1p2"></p>
+            <p id="g1p3"></p>
+            <p id="g1p4"></p>
+            <p id="g1p5"></p>
+            <script>
+                document.getElementById('g1').addEventListener('click',(event)=>{
+                    const g1p1 = document.getElementById('g1p1');
+                    const g1p2 = document.getElementById('g1p2');
+                    const g1p3 = document.getElementById('g1p3');
+                    const g1p4 = document.getElementById('g1p4');
+                    const g1p5 = document.getElementById('g1p5');
+                    let s = "不可以";
+                    console.log(event)
+                    g1p1.textContent = `X座標為: ${event.offsetX}`;
+                    g1p2.textContent = `Y座標為: ${event.offsetY}`;
+                    if(event.cancelable){
+                        s = "可以";
+                    }else{
+                        s = "不可以";
+                    }
+                    if(event.ctrlKey){
+                        g1p4.textContent = `CTRL鍵是否被按下後點擊: ${"有"}`;
+                    }else{
+                        g1p4.textContent = `CTRL鍵是否被按下後點擊: ${"沒有"}`;
+                    }
+                    if(event.shiftKey){
+                        g1p5.textContent = `SHIFT鍵是否被按下後點擊: ${"有"}`;
+                    }else{
+                        g1p5.textContent = `SHIFT鍵是否被按下後點擊: ${"沒有"}`;
+                    }
+                    g1p3.textContent = `是否可取消此事件: ${s}`;
+
+                })
+            </script>
+        </div>
+        <div id="g2" class="grid">
+            <p>畫筆效果</p>
+            <script>
+                const g2 = document.getElementById('g2');
+                let isDraw = false;
+                
+                g2.addEventListener('mousedown', (e) => {
+                    isDrawing = true;
+                    const rect = g2.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    drawDotG2(x, y);
+                });
+        
+                g2.addEventListener('mousemove', (e) => {
+                    if (isDrawing) {
+                        const rect = g2.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        drawDotG2(x, y);
+                    }
+                });
+        
+                g2.addEventListener('mouseup', () => {
+                    isDrawing = false;
+                });
+        
+                g2.addEventListener('mouseleave', () => {
+                    isDrawing = false;
+                });
+                
+                function drawDotG2(x, y) {
+                    const dot = document.createElement('div');
+                        dot.classList.add('dot');
+                        dot.style.backgroundColor = 'blue';
+                        dot.style.width = '20px';
+                        dot.style.height = '20px';
+                        dot.style.left = `${x}px`;
+                        dot.style.top = `${y}px`;
+                        g2.appendChild(dot);
+                }
+                             
+            </script>
+        </div>
+        <div id="g3" class="grid">
+            <p>眼球追蹤</p>
+            <div class="face">
+                <div class="eye" id="left-eye">
+                    <div class="pupil"></div>
+                </div>
+                <div class="eye" id="right-eye">
+                    <div class="pupil"></div>
+                </div>
+            </div>
+            <script>
+                const g3 = document.getElementById('g3');
+                g3.addEventListener('mousemove', (event) => {
+                    const eyes = document.querySelectorAll('.eye');
+                    eyes.forEach(eye => {
+                        const rect = eye.getBoundingClientRect();
+                        const eyeX = rect.left + rect.width / 2;
+                        const eyeY = rect.top + rect.height / 2;
+                        const deltaX = event.clientX - eyeX;
+                        const deltaY = event.clientY - eyeY;
+                        const angle = Math.atan2(deltaY, deltaX);
+                        const pupil = eye.querySelector('.pupil');
+                        const pupilRadius = eye.offsetWidth / 4;
+                        const moveX = pupilRadius * Math.cos(angle);
+                        const moveY = pupilRadius * Math.sin(angle);
+                        pupil.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                    });
+                });
+            </script>
+        </div>
+        <div id="g4" class="grid">
+            <p>增加橡皮擦</p>
+            <button id="Pen">畫筆</button>
+            <button id="eraser">橡皮擦</button>
+            <script>
+                const g4 = document.getElementById('g4');
+                let isDrawing = false;
+                let currentTool = 'pen';
+        
+                document.getElementById('Pen').addEventListener('click', () => {
+                    currentTool = 'pen';
+                });
+        
+                document.getElementById('eraser').addEventListener('click', () => {
+                    currentTool = 'eraser';
+                });
+        
+                g4.addEventListener('mousedown', (e) => {
+                    isDrawing = true;
+                    const rect = g4.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    drawDotG4(x, y);
+                });
+        
+                g4.addEventListener('mousemove', (e) => {
+                    if (isDrawing) {
+                        const rect = g4.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        drawDotG4(x, y);
+                    }
+                });
+        
+                g4.addEventListener('mouseup', () => {
+                    isDrawing = false;
+                });
+        
+                g4.addEventListener('mouseleave', () => {
+                    isDrawing = false;
+                });
+        
+                function drawDotG4(x, y) {
+                    if (currentTool === 'pen') {
+                        const dot = document.createElement('div');
+                        dot.classList.add('dot');
+                        dot.style.backgroundColor = 'red';
+                        dot.style.width = '20px';
+                        dot.style.height = '20px';
+                        dot.style.left = `${x}px`;
+                        dot.style.top = `${y}px`;
+                        g4.appendChild(dot);
+                    } else if (currentTool === 'eraser') {
+                        const dots = document.querySelectorAll('#g4 .dot');
+                        dots.forEach(dot => {
+                            const dotRect = dot.getBoundingClientRect();
+                            const dotX = dotRect.left + dotRect.width / 2 - g4.getBoundingClientRect().left;
+                            const dotY = dotRect.top + dotRect.height / 2 - g4.getBoundingClientRect().top;
+                            const distance = Math.sqrt(Math.pow(dotX - x, 2) + Math.pow(dotY - y, 2));
+                            if (distance < 10) {  // 檢測距離以刪除畫筆點
+                                dot.remove();
+                            }
+                        });
+                    }
+                }
+            </script>
+        </div>
+        <div id="g5" class="grid">
+            <p>區域放大鏡</p>
+            <div id="textArea">
+                <p>這是一個可放大的文字區域。將鼠標移動到此處會顯示放大鏡效果。</p>
+                <div class="magnifier" id="magnifier1">
+                    <img src="" alt="">
+                </div>
+            </div>
+            <script>
+                const magnifier1 = document.getElementById('magnifier1');
+                document.addEventListener('DOMContentLoaded', function() {
+                    const textArea = document.getElementById('textArea');
+                    const magnifier1Img = magnifier1.querySelector('img');
+                        // 產生文字區域內容的快照
+                        html2canvas(textArea).then(canvas => {
+                            magnifier1Img.src = canvas.toDataURL();
+                        });
+
+                        textArea.addEventListener('mousemove', function(event) {
+                            const rect = textArea.getBoundingClientRect();
+                            const x = event.clientX - rect.left;
+                            const y = event.clientY - rect.top;
+
+                            // 將放大鏡位置設定為以滑鼠指標為中心
+                            magnifier1.style.left = `${event.clientX - magnifier1.offsetWidth / 2}px`;
+                            magnifier1.style.top = `${event.clientY - magnifier1.offsetHeight / 2}px`;
+                            magnifier1.style.display = 'block';
+
+                            // 計算放大影像的位置
+                            const imgX = -x * 2 + magnifier1.offsetWidth / 2;
+                            const imgY = -y * 5 + magnifier1.offsetHeight / 2;
+
+                            // 移動放大鏡影像以建立縮放效果
+                            magnifier1Img.style.left = `${imgX}px`;
+                            magnifier1Img.style.top = `${imgY}px`;
+                        });
+
+                        textArea.addEventListener('mouseleave', function() {
+                            magnifier1.style.display = 'none';
+                        });
+                });
+            </script>            
+        </div>
+        <div id="g6" class="grid">
+            <p>全域放大鏡</p>
+            <button onclick="toggleMagnifier()">開啟/關閉放大鏡</button>
+            <div class="magnifier2" id="magnifier2">
+                <img id="magnifierImage" src="" alt="">
+            </div>
+            <script>
+                let isMagnifierActive = false;
+                const main = document.getElementById('main');
+                const magnifier2 = document.getElementById('magnifier2');
+                const magnifierImg = document.getElementById('magnifierImage');
+            
+                document.addEventListener('mousemove', (e) => {
+                    if (isMagnifierActive) {
+                        magnifier1.style.display = "none";
+                        const rect2 = document.body.getBoundingClientRect();
+                        const x = e.clientX-400;
+                        const y = e.clientY-350;
+                        console.log(x,y)
+        
+                        magnifier2.style.left = `${x - magnifier2.offsetWidth / 2}px`;
+                        magnifier2.style.top = `${y - magnifier2.offsetHeight / 2}px`;
+        
+                        const imgX = -x * 1.25 + magnifier2.offsetWidth / 2;
+                        const imgY = -y * 1.25 + magnifier2.offsetHeight / 2;
+        
+                        magnifierImg.style.left = `${imgX-450}px`;
+                        magnifierImg.style.top = `${imgY-350}px`;
+                    }
+                });
+            
+                function toggleMagnifier() {
+                    if (isMagnifierActive) {
+                        magnifier2.style.display = 'none'; // 隱藏放大鏡
+                        isMagnifierActive = false;
+                    } else {
+                        magnifier2.style.display = 'none'; // 先隱藏放大鏡
+                        html2canvas(document.body, {
+                            ignoreElements: function(element) {
+                                return element.id === 'magnifier2';
+                            }
+                        }).then(canvas => {
+                            magnifierImg.src = canvas.toDataURL();
+                            magnifier2.style.display = 'block'; // 顯示放大鏡
+                        });
+                        isMagnifierActive = true;
+                    }
+                }
+            
+                // 初始化時隱藏放大鏡
+                magnifier2.style.display = 'none';
+            </script>
+        </div>
+        <div id="g7" class="grid">
+            <button id="pen1">畫筆</button>
+            <button id="eraser1">橡皮擦</button>
+        </div>
+        <div id="g8" class="grid">
+            <div id="c1" class="clr">
+                <script>
+                    const col = []
+                    for(var i=0;i<9;i++){
+                        col[i+1]=document.getElementById(`c${i+1}`)
+                    }
+                    const pen1 = true;
+                    c[1].addEventListener('click',()=>{
+                        
+                    })
+                </script>
+            </div>
+            <div id="c2" class="clr"></div>
+            <div id="c3" class="clr"></div>
+            <div id="c4" class="clr"></div>
+            <div id="c5" class="clr"></div>
+            <div id="c6" class="clr"></div>
+            <div id="c7" class="clr"></div>
+            <div id="c8" class="clr"></div>
+            <div id="c9" class="clr"></div>
+        </div>
+    </div>
+</body>
+</html>

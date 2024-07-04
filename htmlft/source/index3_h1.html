@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .chart-box {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+
+        canvas {
+            width: 100% !important;
+            height: auto !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chart-container">
+        <!-- 折線圖 -->
+        <div class="chart-box">
+            <canvas id="lineChart"></canvas>
+        </div>
+        <!-- 長條圖 -->
+        <div class="chart-box">
+            <canvas id="barChart"></canvas>
+        </div>
+        <!-- 圓餅圖 -->
+        <div class="chart-box">
+            <canvas id="pieChart"></canvas>
+        </div>
+        <!-- 雷達圖 -->
+        <div class="chart-box">
+            <canvas id="radarChart"></canvas>
+        </div>
+        <!-- 極地區域圖 -->
+        <div class="chart-box">
+            <canvas id="polarAreaChart"></canvas>
+        </div>
+        <!-- 泡泡圖 -->
+        <div class="chart-box">
+            <canvas id="bubbleChart"></canvas>
+        </div>
+        <!-- 環形圖 -->
+        <div class="chart-box">
+            <canvas id="doughnutChart"></canvas>
+        </div>
+        <!-- 水平長條圖 -->
+        <div class="chart-box">
+            <canvas id="horizontalBarChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Function to generate random data
+        function getRandomData(size, max) {
+            return Array.from({ length: size }, () => Math.floor(Math.random() * max));
+        }
+
+        // Function to generate random bubble data
+        function getRandomBubbleData(size, maxX, maxY, maxR) {
+            return Array.from({ length: size }, () => ({
+                x: Math.floor(Math.random() * maxX),
+                y: Math.floor(Math.random() * maxY),
+                r: Math.floor(Math.random() * maxR)
+            }));
+        }
+
+        // Function to update chart data
+        function updateChartData(chart, max) {
+            chart.data.datasets.forEach(dataset => {
+                if (chart.config.type === 'bubble') {
+                    dataset.data = getRandomBubbleData(dataset.data.length, max, max, max / 2);
+                } else {
+                    dataset.data = getRandomData(dataset.data.length, max);
+                }
+            });
+            chart.update();
+        }
+
+        // Initialize charts
+        const charts = [];
+
+        // 折線圖
+        charts.push(new Chart(document.getElementById('lineChart'), {
+            type: 'line',
+            data: {
+                labels: ['一月', '二月', '三月', '四月'],
+                datasets: [{
+                    label: '訪客數量',
+                    data: [65, 59, 80, 81],
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            }
+        }));
+
+        // 長條圖
+        charts.push(new Chart(document.getElementById('barChart'), {
+            type: 'bar',
+            data: {
+                labels: ['一月', '二月', '三月', '四月'],
+                datasets: [{
+                    label: '銷售額',
+                    data: [200, 300, 400, 500],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        }));
+
+        // 圓餅圖
+        charts.push(new Chart(document.getElementById('pieChart'), {
+            type: 'pie',
+            data: {
+                labels: ['紅色', '藍色', '黃色', '綠色'],
+                datasets: [{
+                    label: '顏色分佈',
+                    data: [12, 19, 3, 5],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            }
+        }));
+
+        // 雷達圖
+        charts.push(new Chart(document.getElementById('radarChart'), {
+            type: 'radar',
+            data: {
+                labels: ['食品', '飲料', '服裝', '電子產品', '書籍'],
+                datasets: [{
+                    label: '消費類別',
+                    data: [65, 59, 90, 81, 56],
+                    fill: true,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    pointBackgroundColor: 'rgb(255, 99, 132)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(255, 99, 132)'
+                }]
+            },
+            options: {
+                elements: {
+                    line: {
+                        borderWidth: 3
+                    }
+                }
+            }
+        }));
+
+        // 極地區域圖
+        charts.push(new Chart(document.getElementById('polarAreaChart'), {
+            type: 'polarArea',
+            data: {
+                labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                datasets: [{
+                    label: '季度銷售',
+                    data: [10, 20, 30, 40],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(75, 192, 192, 0.5)'
+                    ]
+                }]
+            }
+        }));
+
+        // 泡泡圖
+        charts.push(new Chart(document.getElementById('bubbleChart'), {
+            type: 'bubble',
+            data: {
+                datasets: [{
+                    label: '泡泡資料',
+                    data: [{
+                        x: 30,
+                        y: 30,
+                        r: 15
+                    }, {
+                        x: 40,
+                        y: 10,
+                        r: 10
+                    }],
+                    backgroundColor: 'rgb(255, 99, 132)'
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        }));
+
+        // 環形圖
+        charts.push(new Chart(document.getElementById('doughnutChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['紅色', '藍色', '黃色'],
+                datasets: [{
+                    label: '顏色分佈',
+                    data: [300, 50, 100],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 206, 86)'
+                    ],
+                    hoverOffset: 4
+                }]
+            }
+        }));
+
+        // 水平長條圖
+        charts.push(new Chart(document.getElementById('horizontalBarChart'), {
+            type: 'bar',
+            data: {
+                labels: ['2019', '2020', '2021', '2022'],
+                datasets: [{
+                    label: '年度收入',
+                    data: [50, 60, 70, 80],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        }));
+
+
+        setInterval(() => updateChartData(charts[0], 100), 1000); // 1 second
+        setInterval(() => updateChartData(charts[1], 100), 2000); // 2 seconds
+        setInterval(() => updateChartData(charts[2], 50), 3000); // 3 seconds
+        setInterval(() => updateChartData(charts[3], 100), 4000); // 4 seconds
+        setInterval(() => updateChartData(charts[4], 50), 5000); // 5 seconds
+        setInterval(() => updateChartData(charts[5], 100), 6000); // 6 seconds
+        setInterval(() => updateChartData(charts[6], 500), 7000); // 7 seconds
+        setInterval(() => updateChartData(charts[7], 100), 8000); // 8 seconds
+    </script>
+</body>
+
+</html>

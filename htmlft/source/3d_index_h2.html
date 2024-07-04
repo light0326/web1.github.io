@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <style>
+        .chart-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .chart-box {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+
+        .chart-box div {
+            width: 100%;
+            height: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chart-container">
+        <!-- 折線圖 -->
+        <div class="chart-box">
+            <div id="lineChart"></div>
+        </div>
+        <!-- 長條圖 -->
+        <div class="chart-box">
+            <div id="barChart"></div>
+        </div>
+        <!-- 圓餅圖 -->
+        <div class="chart-box">
+            <div id="pieChart"></div>
+        </div>
+        <!-- 雷達圖 -->
+        <div class="chart-box">
+            <div id="radarChart"></div>
+        </div>
+        <!-- 極地區域圖 -->
+        <div class="chart-box">
+            <div id="polarAreaChart"></div>
+        </div>
+        <!-- 泡泡圖 -->
+        <div class="chart-box">
+            <div id="bubbleChart"></div>
+        </div>
+        <!-- 環形圖 -->
+        <div class="chart-box">
+            <div id="doughnutChart"></div>
+        </div>
+        <!-- 水平長條圖 -->
+        <div class="chart-box">
+            <div id="horizontalBarChart"></div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize charts
+        const charts = [];
+
+        // Function to generate random data
+        function getRandomData(size, max) {
+            return Array.from({ length: size }, () => Math.floor(Math.random() * max));
+        }
+
+        // Function to generate random bubble data
+        function getRandomBubbleData(size, maxX, maxY, maxR) {
+            return Array.from({ length: size }, () => ({
+                value: [Math.floor(Math.random() * maxX), Math.floor(Math.random() * maxY), Math.floor(Math.random() * maxR)]
+            }));
+        }
+
+        // Function to update chart data
+        function updateChartData(chart, max, type) {
+            const option = chart.getOption();
+            if (type === 'bubble') {
+                option.series[0].data = getRandomBubbleData(option.series[0].data.length, max, max, max / 2);
+            } else {
+                option.series[0].data = getRandomData(option.series[0].data.length, max);
+            }
+            chart.setOption(option);
+        }
+
+        // Line chart
+        const lineChart = echarts.init(document.getElementById('lineChart'));
+        lineChart.setOption({
+            title: { text: '折線圖' },
+            xAxis: { type: 'category', data: ['一月', '二月', '三月', '四月'] },
+            yAxis: {
+                type: 'value', min: 0,
+                max: 100
+            },
+            series: [{ data: [65, 59, 80, 81], type: 'line' }]
+        });
+        charts.push({ chart: lineChart, type: 'line', max: 100 });
+
+        // Bar chart
+        const barChart = echarts.init(document.getElementById('barChart'));
+        barChart.setOption({
+            title: { text: '長條圖' },
+            xAxis: { type: 'category', data: ['一月', '二月', '三月', '四月'] },
+            yAxis: {
+                type: 'value', min: 0,
+                max: 1000
+            },
+            series: [{
+                data: [200, 300, 400, 500],
+                type: 'bar',
+                itemStyle: {
+                    color: function (params) {
+                        const colorList = ['#c23531', '#2f4554', '#61a0a8', '#d48265'];
+                        return colorList[params.dataIndex]
+                    }
+                }
+            }]
+        });
+        charts.push({ chart: barChart, type: 'bar', max: 500 });
+
+        // Pie chart
+        const pieChart = echarts.init(document.getElementById('pieChart'));
+        pieChart.setOption({
+            title: { text: '圓餅圖' },
+            series: [{
+                type: 'pie',
+                data: [
+                    { value: 12, name: '紅色' },
+                    { value: 19, name: '藍色' },
+                    { value: 3, name: '黃色' },
+                    { value: 5, name: '綠色' }
+                ]
+            }]
+        });
+        charts.push({ chart: pieChart, type: 'pie', max: 100 });
+
+        // Radar chart
+        const radarChart = echarts.init(document.getElementById('radarChart'));
+        radarChart.setOption({
+            title: { text: '雷達圖' },
+            radar: {
+                indicator: [
+                    { name: '食品', max: 100 },
+                    { name: '飲料', max: 100 },
+                    { name: '服裝', max: 100 },
+                    { name: '電子產品', max: 100 },
+                    { name: '書籍', max: 100 }
+                ]
+            },
+            series: [{
+                type: 'radar',
+                data: [{ value: [65, 59, 90, 81, 56], name: '消費類別', }]
+            }]
+        });
+        charts.push({ chart: radarChart, type: 'radar', max: 100 });
+
+        // Polar Area chart
+        const polarAreaChart = echarts.init(document.getElementById('polarAreaChart'));
+        polarAreaChart.setOption({
+            title: { text: '極地區域圖' },
+            angleAxis: {},
+            radiusAxis: { type: 'category', data: ['Q1', 'Q2', 'Q3', 'Q4'], z: 10 },
+            polar: {},
+            series: [{
+                type: 'bar',
+                data: [10, 20, 30, 40],
+                coordinateSystem: 'polar',
+                itemStyle: {
+                    color: function (params) {
+                        const colorList = ['#c23531', '#2f4554', '#61a0a8', '#d48265'];
+                        return colorList[params.dataIndex]
+                    }
+                }
+            }]
+        });
+        charts.push({ chart: polarAreaChart, type: 'polarArea', max: 50 });
+
+        // Bubble chart
+        const bubbleChart = echarts.init(document.getElementById('bubbleChart'));
+        bubbleChart.setOption({
+            title: { text: '泡泡圖' },
+            xAxis: {
+                type: 'value', min: 0,
+                max: 100
+            },
+            yAxis: {
+                type: 'value', min: 0,
+                max: 100
+            },
+            series: [{
+                type: 'scatter',
+                symbolSize: function (data) {
+                    return data[2];
+                },
+                data: [
+                    [20, 30, 15],
+                    [40, 10, 10]
+                ]
+            }]
+        });
+        charts.push({ chart: bubbleChart, type: 'bubble', max: 100 });
+
+        // Doughnut chart
+        const doughnutChart = echarts.init(document.getElementById('doughnutChart'));
+        doughnutChart.setOption({
+            title: { text: '環形圖' },
+            series: [{
+                type: 'pie',
+                radius: ['50%', '70%'],
+                data: [
+                    { value: 300, name: 'iphone' },
+                    { value: 50, name: 'ipad pro' },
+                    { value: 100, name: 'Macbook Pro' }
+                ]
+            }]
+        });
+        charts.push({ chart: doughnutChart, type: 'doughnut', max: 500 });
+
+        // Horizontal Bar chart
+        const horizontalBarChart = echarts.init(document.getElementById('horizontalBarChart'));
+        horizontalBarChart.setOption({
+            title: { text: '水平長條圖' },
+            xAxis: {
+                type: 'value', min: 0,
+                max: 100
+            },
+            yAxis: { type: 'category', data: ['2019', '2020', '2021', '2022'] },
+            series: [{
+                type: 'bar',
+                data: [50, 60, 70, 80],
+                itemStyle: {
+                    color: function (params) {
+                        const colorList = ['#c23531', '#2f4554', '#61a0a8', '#d48265'];
+                        return colorList[params.dataIndex]
+                    }
+                }
+            }]
+        });
+        charts.push({ chart: horizontalBarChart, type: 'bar', max: 100 });
+
+        // Set intervals to update charts at different times
+        //setInterval(() => updateChartData(charts[0].chart, charts[0].max, charts[0].type), 1000); // 1 second
+        // setInterval(() => updateChartData(charts[1].chart, charts[1].max, charts[1].type), 2000); // 2 seconds
+        //setInterval(() => updateChartData(charts[2].chart, charts[2].max, charts[2].type), 3000); // 3 seconds
+        //setInterval(() => updateChartData(charts[3].chart, charts[3].max, charts[3].type), 4000); // 4 seconds
+        //setInterval(() => updateChartData(charts[4].chart, charts[4].max, charts[4].type), 5000); // 5 seconds
+        //setInterval(() => updateChartData(charts[5].chart, charts[5].max, charts[5].type), 6000); // 6 seconds
+        //setInterval(() => updateChartData(charts[6].chart, charts[6].max, charts[6].type), 7000); // 7 seconds
+        //setInterval(() => updateChartData(charts[7].chart, charts[7].max, charts[7].type), 8000); // 8 seconds
+        // Set interval to update all charts simultaneously every 5 seconds
+
+
+        setInterval(() => {
+            // Iterate through each chart and update its data
+            charts.forEach(chartData => {
+                updateChartData(chartData.chart, chartData.max, chartData.type);
+            });
+        }, 2000); // Update every 2 seconds
+
+    </script>
+</body>
+
+</html>

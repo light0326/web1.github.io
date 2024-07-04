@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
+    <meta http-equiv="Cross-Origin-Embedder-Policy" content="require-corp">
+    <title>Document</title>
+    <link rel="stylesheet" href="./spin.css">
+</head>
+<body>
+    <div id="addCashArea">
+        <button id="closebtn" onclick="closeBtn()">關閉視窗</button>
+        <label>請輸入加值金額：</label>
+        <input type="number" id="addMoney">
+        <button onclick="AddCash()">加值</button>
+    </div>
+    <div id="loginArea">
+        <button id="loginclosebtn" onclick="logincloseBtn()">關閉視窗</button>
+        <label id="lbllogin">登入</label>
+        <label>帳號</label>&nbsp;
+        <input type="text" id="account" name="act"><br>
+        <label>密碼</label>&nbsp;
+        <input type="password" id="password" name="pwd"><br>
+        <button id="loginbtn" onclick="login()">登入</button><button id="signup" onclick="signup()">註冊</button>
+    </div>
+    <div id="signupArea">
+        <button id="signupclosebtn" onclick="signupcloseBtn()">關閉視窗</button>
+        <label id="lblsignup">註冊</label>
+        <label>帳號</label>&nbsp;
+        <input type="text" id="signact" name="signact"><br>
+        <label>密碼</label>&nbsp;
+        <input type="password" id="signpwd" name="signpwd"><br>
+        <button id="sign" onclick="sign()">送出</button>
+    </div>
+    <div id="contlist">
+        <div id="mainList">
+            <label id="cash">餘額： <span id="totCash"></span>元</label>
+            <label id="name">Username</label>
+            <button id="logout">logout</button>
+            <button id="login">login</button>
+            <button id="addCash">AddCash</button>
+        </div>
+    </div>
+    
+    <div class="spin">
+        <div id="winnerCash">
+            <label id="lbl" style="display: block;">You Win</label>
+        </div>
+        <div id="area1" class="area">
+            <div id="slot1" class="slot"></div>
+            <div id="slot2" class="slot"></div>
+            <div id="slot3" class="slot"></div>
+        </div>
+        <div id="area2" class="area">
+            <input type="number" min="100" id="dropCash" value="100">
+            <button id="lever">Spin</button>
+        </div>
+    </div>
+
+    
+    <script>
+        window.onload = function (){
+            startGame();
+            if(localStorage.getItem('sa')!= null){
+
+            }else{
+                actsa();
+            }
+            
+        }
+        let username='sa';
+        let password;
+        const lbl = document.getElementById('lbl');
+        const sl1 = document.getElementById('slot1');
+        const sl2 = document.getElementById('slot2');
+        const sl3 = document.getElementById('slot3');
+        const dropCash = document.getElementById('dropCash');
+        let count = 0;
+        let flyPotCash = 1000;
+        let sum = 0;
+        const icon = ['🍉','🍒','🍌','🍉','🍒','🍌','🍉','🍒','🍌','💎','💎','✈'];
+        const iconf = ['💎','💎','✈']
+        function startGame(){
+            let totCash = document.getElementById('totCash');
+            totCash.textContent = 0;
+            sum = parseInt(totCash.textContent);
+            resetVal(); 
+            
+
+            document.getElementById('lever').addEventListener('click',async ()=>{
+                if(document.getElementById('name').textContent == "Username"){
+                    console.log(sum);
+                    alert('請先登入才可進行遊戲!!');
+                    return;
+                }
+                if(parseInt(totCash.textContent) == 0){
+                    dropCash.value = 100
+                }else{
+                    if(dropCash.value <= sum){
+                        flyPotCash += dropCash.value*5;
+                        setMoney((dropCash.value*-1));
+                        count++;
+                        document.getElementById('lever').style.display = "none";
+                        await startRoll();
+                    }else{
+                        alert('餘額不足')
+                    }
+                }
+            })
+
+            dropCash.addEventListener('change',()=>{
+                if(dropCash.value > sum){
+                    dropCash.value = sum;
+                }
+                if(dropCash.value <= 100){
+                    dropCash.value = 100;
+                }
+            })
+        }
+        window.addEventListener('beforeunload',()=>{
+            logout();
+        })
+        function logincloseBtn(){
+            document.getElementById('loginArea').style.display = 'none';
+        }
+        function signup(){
+            document.getElementById('signupArea').style.display = "block";
+            document.getElementById('loginArea').style.display = "none";
+        }
+        function signupcloseBtn(){
+            document.getElementById('signupArea').style.display = "none";
+            document.getElementById('loginArea').style.display = "block";
+        }
+        function actsa(){
+            const accinfo = {username:'sa',password:'8',balance:'5000',jkpbalance:'1000',count:'0'};
+            localStorage.setItem('sa',JSON.stringify(accinfo));
+        }
+        document.getElementById('logout').addEventListener('click',()=>{
+            logout();
+        })
+        function logout(){
+            if(username == null){
+                return;
+            }else if(document.getElementById('name').textContent == "Username"){
+                return;
+            }
+            accinfo.balance = totCash.textContent;
+            accinfo.count = count.toString();
+            accinfo.jkpbalance = flyPotCash.toString();
+            localStorage.setItem(username,JSON.stringify(accinfo));
+            alert('帳戶更新成功');
+            document.getElementById('login').style.display = "block";
+            document.getElementById('logout').style.display = "none";
+            document.getElementById('name').textContent = "Username";
+            resetVal();
+        }
+        function resetVal(){
+            sum =0;
+            totCash.textContent = '0';
+            flyPotCash = 1000;
+            count = 0;
+            username = null;
+            password = null; 
+            lbl.textContent = "JecketPot "+flyPotCash;
+            sl1.textContent = icon[0];
+            sl2.textContent = icon[0];
+            sl3.textContent = icon[0];
+        }
+        document.getElementById('login').addEventListener('click',()=>{
+            document.getElementById('addCashArea').style.display = 'none';
+            document.getElementById('loginArea').style.display = "block";
+            document.getElementById('account').value = "";
+            document.getElementById('password').value = "";
+        })
+        function sign(){
+            username = document.getElementById('signact').value;
+            password = document.getElementById('signpwd').value;
+            if(JSON.parse(localStorage.getItem(username)) == null){
+                accinfo = {username:username,password:password,balance:'3000',jkpbalance:'1000',count:'0'};
+                localStorage.setItem(username,JSON.stringify(accinfo));
+                alert('帳號註冊成功');
+                document.getElementById('signupArea').style.display = "none";
+                document.getElementById('loginArea').style.display = "block";
+                document.getElementById('account').value = "";
+                document.getElementById('password').value = "";
+                document.getElementById('signact').value = "";
+                document.getElementById('signpwd').value = "";
+            }else{
+                alert('此用戶名已存在');
+                document.getElementById('account').value = "";
+                document.getElementById('password').value = "";
+                document.getElementById('signact').value = "";
+                document.getElementById('signpwd').value = "";
+            }
+            
+        }
+        function login(){
+            username = document.getElementById('account').value;
+            password = document.getElementById('password').value;
+            if(localStorage.getItem(username) == null){
+                alert('無此用戶，請重新註冊!!!!');
+                document.getElementById('account').value = "";
+                document.getElementById('password').value = "";
+            }else{
+                accinfo = JSON.parse(localStorage.getItem(username));
+            }
+            if(username ==  accinfo.username && password == accinfo.password){
+                document.getElementById('name').textContent = username;
+                document.getElementById('loginArea').style.display = "none";
+                document.getElementById('login').style.display = "none";
+                document.getElementById('logout').style.display = "block";
+                totCash.textContent = accinfo.balance;
+                sum = parseInt(totCash.textContent);
+                flyPotCash = parseInt(accinfo.jkpbalance);
+                lbl.textContent = "JecketPot "+flyPotCash;
+                count = accinfo.count;
+
+            }else{
+                alert("帳號/密碼錯誤，請重新登入或註冊!!");
+                document.getElementById('account').value = "";
+                document.getElementById('password').value = "";
+            }
+        }
+        document.getElementById('addCash').addEventListener('click',()=>{
+            document.getElementById('addCashArea').style.display="block";
+        })
+        function closeBtn(){
+            document.getElementById('addCashArea').style.display="none";
+        }
+        function AddCash(){
+            if(document.getElementById('name').textContent == 'Username'){
+                alert('請登入後再加值!!!');
+                document.getElementById('addMoney').value = "";
+                return;
+            }
+            
+            const addMoney = document.getElementById('addMoney').value;
+            if(addMoney > 5000){
+                alert('加值金額上限為 5000');
+                document.getElementById('addMoney').value = "";
+            }else{
+                setMoney(addMoney);
+                document.getElementById('addMoney').value = "";
+                document.getElementById('addCashArea').style.display = "none";
+            }
+            
+        }
+        function update(arr) {
+            sl1.textContent = arr[0];
+            sl2.textContent = arr[1];
+            sl3.textContent = arr[2];
+        }
+        function getWin(arr,count,sum){
+            document.getElementById('lever').style.display = "block";
+            let updateSum = 0;
+            if(arr[0] == arr[1] && arr[1] == arr[2]){
+                switch(arr[0]){
+                    case '🍉':
+                        updateSum = 100*count*dropCash.value*0.05;
+                        lbl.textContent = `You Win ${updateSum}`;
+                        console.log(sum);
+                        break;
+                    case '🍒':
+                        updateSum = 150*count*dropCash.value*0.05;
+                        lbl.textContent = `You Win ${updateSum}`;
+                        console.log(sum);
+                        break;
+                    case '🍌':
+                        updateSum = 50*count*dropCash.value*0.05;
+                        lbl.textContent = `You Win ${updateSum}`;
+                        console.log(sum);
+                        break;
+                    case '💎':
+                        updateSum = 500*count*dropCash.value*0.05;
+                        lbl.textContent = `You Win ${updateSum}`;
+                        console.log(sum);
+                        break;
+                    case '✈':
+                        updateSum = flyPotCash;
+                        lbl.textContent = `You Win ${updateSum}`;
+                        flyPotCash = 1000;
+                        console.log(sum);
+                        break;
+                }
+                setMoney(updateSum);
+            }else{
+                lbl.textContent = "JecketPot： "+flyPotCash;
+            }        
+            
+        }
+        function setMoney(updateSum){
+            sum += parseInt(updateSum);
+            totCash.textContent = sum.toString();
+            dropCash.step = sum*0.1;
+        }
+        async function AnimatRoll(n){
+            let ct=0;
+            let cycle1 = setInterval(()=>{
+                sl1.textContent = icon[ct];
+                ct = Math.floor(Math.random()*icon.length);
+            },n)
+            let cycle2 = setInterval(()=>{
+                sl2.textContent = icon[ct];
+                ct = Math.floor(Math.random()*icon.length);
+            },n)
+            let cycle3 = setInterval(()=>{
+                sl3.textContent = icon[ct];
+                ct = Math.floor(Math.random()*icon.length);
+            },n)
+
+            setTimeout(()=>{
+                clearInterval(cycle1);
+                clearInterval(cycle2);
+                clearInterval(cycle3);
+                let arr = []
+                for(var i=0;i<3;i++){
+                    arr.push(icon[Math.floor(Math.random()*icon.length)]);
+                }
+                update(arr);
+                getWin(arr,count,sum);
+            },1000);
+            
+        }
+        async function AnimatRollf(n){
+            let ct=0;
+            let cycle1 = setInterval(()=>{
+                sl1.textContent = icon[ct];
+                ct = Math.floor(Math.random()*icon.length);
+            },n)
+            let cycle2 = setInterval(()=>{
+                sl2.textContent = icon[ct];
+                ct = Math.floor(Math.random()*icon.length);
+            },n)
+            let cycle3 = setInterval(()=>{
+                sl3.textContent = icon[ct];
+                ct = Math.floor(Math.random()*icon.length);
+            },n)
+
+            setTimeout(()=>{
+                clearInterval(cycle1);
+                clearInterval(cycle2);
+                clearInterval(cycle3);
+                let arr = []
+                for(var i=0;i<3;i++){
+                    arr.push(iconf[Math.floor(Math.random()*iconf.length)]);
+                }
+                update(arr);
+                getWin(arr,count,sum);
+            },1000);
+            
+        }
+        function startRoll(){
+            if(count >= 300){
+                AnimatRollf(100);
+            }else{
+                AnimatRoll(100);
+            }
+        }
+    </script>
+</body>
+</html>

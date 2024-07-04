@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新增書籍</title>
+    <style>
+        ol li:nth-child(odd){
+            color: red;
+        }
+        ol li:nth-child(even){
+            color: blue;
+        }
+    </style>
+    
+</head>
+
+<body>
+    <p>書名：<input type="text" id="na"><button>新增</button></p>
+    <p>現在有：<span>0</span>本書</p>
+    <ol></ol>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const button = document.querySelector('button');
+            const input = document.getElementById('na');
+            const bookCountSpan = document.querySelector('span');
+            const ol = document.querySelector('ol');
+            
+
+            button.addEventListener('click', function () {
+                if (input.value.trim() === "") {
+                    alert('書籍名稱必須有值!!!');
+                } else {
+                    const li = document.createElement('li');
+                    li.textContent = input.value;
+                    ol.appendChild(li);
+                    bookCountSpan.textContent = ol.getElementsByTagName('li').length;
+                    input.value = ""; 
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

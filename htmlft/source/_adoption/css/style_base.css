@@ -1,0 +1,130 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    list-style-type: none;
+    text-decoration: none;
+}
+
+.wrap {
+    width: 1440px;
+    /* height: 1440px; */
+    /* background-color: bisque; */
+    margin: auto;
+}
+
+nav {
+    background-color: #27343b84;
+    height: 60px;
+    width: 100%;
+    position: sticky;
+    top: 0px;
+    left: 0px;
+    padding-left: 20px;
+    width: 1420px;
+    z-index: 2;
+}
+
+a {
+    color: white;
+}
+
+nav>a {
+    float: left;
+    line-height: 60px;
+}
+
+nav .Menu {
+    margin-right: 15px;
+    float: right;
+}
+
+nav .Menu li {
+    float: left;
+    margin-right: 20px;
+    line-height: 40px;
+    margin-top: 10px;
+    text-align: center;
+    width: 100px;
+}
+
+nav .Menu li a {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+nav .Menu li a:hover {
+    background-color: cadetblue;
+    font-size: 18px;
+}
+
+
+.adv1 {
+    background-image: url(../img/bg02.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 450px;
+    position: relative;
+    overflow: hidden;
+}
+
+.adv2 h2 {
+    line-height: 40px;
+    font-size: 35px;
+    margin-top: 5px;
+    color: white;
+    font-weight: 800;
+}
+
+.adv2 {
+    height: 450px;
+    width: 100%;
+    position: absolute;
+    left: 0px;
+    bottom: -410px;
+    background-color: rgba(0, 100, 0, 0.27);
+    text-align: center;
+    transition: bottom 1s;
+}
+
+.adv2 p {
+    color: white;
+    font-weight: 900;
+    line-height: 2em;
+}
+
+.adv2 p a {
+    text-decoration: none;
+    color: white;
+    display: block;
+    /* 原為 inline 行內元素*/
+    margin: auto;
+    /*區塊置中*/
+    width: 120px;
+    height: 32px;
+    line-height: 32px;
+    background-color: rgba(222, 184, 135, 0.595);
+}
+
+.adv2:hover {
+    bottom: 0px;
+}
+
+footer{
+    background-color: black;
+    width: 100%;
+    height: 40px;
+    padding:20px;
+}
+footer img{
+    float: left;
+    height: 40px;
+    width: 100px;
+}
+footer p{
+    float:right;
+    margin-right:30px;
+    color:white;
+    line-height: 40px;
+}

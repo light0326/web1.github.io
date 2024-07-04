@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB-b4_Fjesd41537OS_hy_VkFPCkDxWBRw&callback=initMap&libraries=marker&v=beta&solution_channel=GMP_CCS_infowindows_v2" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.0/echarts.min.js"></script>
+    <title>Document</title>
+    <style>
+        .main{
+            width: 95%;
+            height: 1200px;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 auto;
+        }
+        .Grid{
+            width: 24%;
+            height: 50%;
+            margin: 0;
+            border: 1px solid black;
+            position: relative;
+            
+        }
+
+        .btn{
+            position: absolute;
+            top: 0;
+            left: 85%;
+        }
+        #btn2,
+        #btn4,
+        #btn6{
+            top:25px;
+            left:55%;
+        }
+        #btn1,
+        #btn3,
+        #btn5{
+            left:63%;
+        }
+        #btn7{
+            top:49.5px;
+            left:78.5%;
+        }
+        #g7selew,
+        #g8selew{
+            left:80%;
+        }
+        .map {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, 0%);
+            width: 99%; /* 或其他你想要的大小 */
+            height: 49%; /* 或其他你想要的大小 */
+            background-color: #ccc; /* 或其他你想要的顏色 */
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div id="g1" class="Grid">
+            <label>API-1</label>
+            <div style="width:50px" class="btn"><button onclick="g1get()">取值</button></div>
+            <h3>即時獲取臭氧值系統</h3>
+            <label>o3臭氧值：</label><input type="text" id="g1output">
+            <script>
+                function g1get(){
+                    const g1url = 'https://api.waqi.info/feed/geo:25.08;121.57/?token=9ec343e01ebbfddc01570f87c8a7bb500724cfe8';
+                    fetch(g1url)
+                        .then(response => response.json())
+                        .then(result => {
+                            document.getElementById('g1output').value = result.data.forecast.daily.o3.map(x => x.avg);
+                        })
+                }
+            </script>
+        </div>
+        <div id="g2" class="Grid">
+            <label>API-2</label>
+            <div style="width:50px" class="btn"><button onclick="g2get()">取值</button></div>
+            <h3>即時獲取臭氧值系統</h3>
+            <label>o3臭氧值：</label><input type="text" id="g2o3"><br>
+            <label>pm10值：</label><input type="text" id="g2pm10"><br>
+            <label>pm2.5值：</label><input type="text" id="g2pm25">
+            <script>
+                function g2get(){
+                    const g2url = 'https://api.waqi.info/feed/geo:25.08;121.57/?token=9ec343e01ebbfddc01570f87c8a7bb500724cfe8';
+                    fetch(g2url)
+                        .then(response => response.json())
+                        .then(result => {
+                            document.getElementById('g2o3').value = result.data.forecast.daily.o3.map(x => x.avg);
+                            document.getElementById('g2pm10').value = result.data.forecast.daily.pm10.map(x => x.avg);
+                            document.getElementById('g2pm25').value = result.data.forecast.daily.pm25.map(x => x.avg);
+                        })
+                }
+            </script>
+        </div>
+        <div id="g3" class="Grid">
+            <label>call_ip_navigator_geolocation1</label>
+            <h3>獲取經緯度座標練習</h3>
+            <h4>透過IP獲取經緯度座標</h4>
+            <label id="g3ipAddress">正在獲取IP位址</label><br>
+            <label id="g3ipCoordinate">正在透過IP位址獲取經緯度座標</label><br>
+            <h4>透過瀏覽器獲取經緯度座標</h4>
+            <label id="g3browserCoordinate">正在透過瀏覽器獲取經緯度座標</label>
+            <script>
+                const apiurl = 'https://ipapi.co/json';
+                window.onload = function(){
+                    g3getIp();
+                    g3getBrowser();
+                    g4getIp();
+                    g5getIp();
+                    g6getIp();
+                    g7get();
+                    g8get();
+                }
+                function g3getIp(){
+                    fetch(apiurl)
+                        .then(response => response.json())
+                        .then(result =>{
+                            const g3IpCoordinate = `經度：${result.longitude}，緯度：${result.latitude}`;
+                            document.getElementById('g3ipAddress').textContent = "IP："+result.ip;
+                            document.getElementById('g3ipCoordinate').textContent = g3IpCoordinate;
+                        })
+                }
+                function g3getBrowser(){
+                    if("geolocation" in navigator){
+                        navigator.geolocation.getCurrentPosition(
+                            position => {
+                                console.log(position);
+                                const g3browserCoordinate = `經度：${position.coords.longitude}，緯度：${position.coords.latitude}`;
+                                document.getElementById('g3browserCoordinate').textContent = g3browserCoordinate;
+                            }
+                        )
+                    }
+                }
+            </script>
+        </div>
+        <div id="g4" class="Grid">
+            <label>call_ip_navigator_geolocation2</label>
+            <div style="width:200px" id="btn1" class="btn"><button>獲取IP經緯度座標</button></div>
+            <div style="width:200px" id="btn2" class="btn"><button onclick="g4getBrowser()">獲取瀏覽器經緯度座標</button></div>
+            <h3>獲取經緯度座標練習</h3>
+            <h4>透過IP獲取經緯度座標</h4>
+            <label id="g4ipAddress">正在獲取IP位址</label><br>
+            <label id="g4ipCoordinate">正在透過IP位址獲取經緯度座標</label><br>
+            <h4>透過瀏覽器獲取經緯度座標</h4>
+            <label id="g4browserCoordinate">正在透過瀏覽器獲取經緯度座標</label>
+            <script>
+                function g4getIp(){
+                    fetch(apiurl)
+                        .then(response => response.json())
+                        .then(result =>{
+                            const g4IpCoordinate = `經度：${result.longitude}，緯度：${result.latitude}`;
+                            document.getElementById('g4ipAddress').textContent = "IP："+result.ip;
+                            document.getElementById('btn1').addEventListener('click',()=>{
+                                document.getElementById('g4ipCoordinate').textContent = g4IpCoordinate;
+                            })
+                        })
+                }
+                function g4getBrowser(){
+                    if("geolocation" in navigator){
+                        navigator.geolocation.getCurrentPosition(
+                            position => {
+                                console.log(position+"aa");
+                                const g4browserCoordinate = `經度：${position.coords.longitude}，緯度：${position.coords.latitude}`;
+                                document.getElementById('g4browserCoordinate').textContent = g4browserCoordinate;
+                            }
+                        )
+                    }
+                }
+            </script>
+        </div>
+        <div id="g5" class="Grid">
+            <label>call_ip_navigator_geolocation3</label>
+            <div style="width:200px" id="btn3" class="btn"><button>獲取IP經緯度座標</button></div>
+            <div style="width:200px" id="btn4" class="btn"><button onclick="g5getBrowser()">獲取瀏覽器經緯度座標</button></div>
+            <h3>獲取經緯度座標練習</h3>
+            <h4>透過IP獲取經緯度座標</h4>
+            <label id="g5ipAddress">正在獲取IP位址</label><br>
+            <label id="g5ipCoordinate">正在透過IP位址獲取經緯度座標</label><br>
+            <h4>透過瀏覽器獲取經緯度座標</h4>
+            <label id="g5browserCoordinate">正在透過瀏覽器獲取經緯度座標</label>
+            <div id="g5map" class="map"></div>
+            <script>
+                function g5getIp(){
+                    fetch(apiurl)
+                        .then(response => response.json())
+                        .then(result =>{
+                            const g5IpCoordinate = `經度：${result.longitude}，緯度：${result.latitude}`;
+                            document.getElementById('g5ipAddress').textContent = "IP："+result.ip;
+                            document.getElementById('btn3').addEventListener('click',()=>{
+                                document.getElementById('g5ipCoordinate').textContent = g5IpCoordinate;
+                                g5showMap(result.latitude,result.longitude);
+                            })
+                        })
+                }
+                function g5getBrowser(){
+                    if("geolocation" in navigator){
+                        navigator.geolocation.getCurrentPosition(
+                            position => {
+                                console.log(position+"aa");
+                                const g5browserCoordinate = `經度：${position.coords.longitude}，緯度：${position.coords.latitude}`;
+                                document.getElementById('g5browserCoordinate').textContent = g5browserCoordinate;
+                                g5showMap(position.coords.latitude,position.coords.longitude)
+                            }
+                        )
+                    }
+                }
+                function g5showMap(lat,lng) {
+                    document.getElementById("g5map").style.display = "block";
+                
+                    // 使用Google 地圖 API 來顯示地圖
+                    var mapOptions = {
+                      center: { lat: lat, lng:lng }, // 中心點的經緯度
+                      zoom: 15, // 初始縮放級別
+                    };
+                    var map = new google.maps.Map(document.getElementById("g5map"), mapOptions);
+                
+                    // 創建一個地理編碼器 (Geocoder) 物件
+                    var geocoder = new google.maps.Geocoder();
+                
+                    // 要進行反地理編碼的經緯度
+                    var latlng = { lat: lat, lng: lng };
+                
+                    // 進行反地理編碼，將經緯度轉換為地址
+                    geocoder.geocode({ 'location': latlng }, function(results, status) {
+                      if (status === 'OK') {
+                        if (results[0]) {
+                          // 將地址顯示在地圖上
+                          var infowindow = new google.maps.InfoWindow({
+                            content: results[0].formatted_address
+                          });
+                          var marker = new google.maps.Marker({
+                            position: latlng,
+                            map: map
+                          });
+                          marker.addListener('click', function() {
+                            infowindow.open(map, marker);
+                          });
+                        } else {
+                          window.alert('找不到地址。');
+                        }
+                      } else {
+                        window.alert('地理編碼失敗，原因：' + status);
+                      }
+                    });
+                  }
+            </script>
+        </div>
+        <div id="g6" class="Grid">
+            <label>call_ip_navigator_geolocation4</label>
+            <div style="width:200px" id="btn5" class="btn"><button>獲取IP經緯度座標</button></div>
+            <div style="width:200px" id="btn6" class="btn"><button onclick="g6getBrowser()">獲取瀏覽器經緯度座標</button></div>
+            <div style="width:200px" id="btn7" class="btn"><button onclick="g6showMap(window.latitude,window.longitude)">開啟地圖</button></div>
+            <h3>獲取經緯度座標練習</h3>
+            <h4>透過IP獲取經緯度座標</h4>
+            <label id="g6ipAddress">正在獲取IP位址</label><br>
+            <label id="g6ipCoordinate">正在透過IP位址獲取經緯度座標</label><br>
+            <h4>透過瀏覽器獲取經緯度座標</h4>
+            <label id="g6browserCoordinate">正在透過瀏覽器獲取經緯度座標</label>
+            <div id="g6map" class="map"></div>
+            <script>
+                function g6getIp(){
+                    fetch(apiurl)
+                        .then(response => response.json())
+                        .then(result =>{
+                            const g6IpCoordinate = `經度：${result.longitude}，緯度：${result.latitude}`;
+                            document.getElementById('g6ipAddress').textContent = "IP："+result.ip;
+                            document.getElementById('btn5').addEventListener('click',()=>{
+                                document.getElementById('g6ipCoordinate').textContent = g6IpCoordinate;
+                                window.latitude = result.latitude;
+                                window.longitude = result.longitude;
+                            })
+                        })
+                }
+                function g6getBrowser(){
+                    if("geolocation" in navigator){
+                        navigator.geolocation.getCurrentPosition(
+                            position => {
+                                console.log(position+"aa");
+                                const g6browserCoordinate = `經度：${position.coords.longitude}，緯度：${position.coords.latitude}`;
+                                document.getElementById('g6browserCoordinate').textContent = g6browserCoordinate;
+                                window.latitude = position.coords.latitude;
+                                window.longitude = position.coords.longitude;
+                            }
+                        )
+                    }
+                }
+                function g6showMap(lat,lng) {
+                    document.getElementById("g6map").style.display = "block";
+                
+                    // 使用Google 地圖 API 來顯示地圖
+                    var mapOptions = {
+                      center: { lat: lat, lng:lng }, // 中心點的經緯度
+                      zoom: 15, // 初始縮放級別
+                    };
+                    var map = new google.maps.Map(document.getElementById("g6map"), mapOptions);
+                
+                    // 創建一個地理編碼器 (Geocoder) 物件
+                    var geocoder = new google.maps.Geocoder();
+                
+                    // 要進行反地理編碼的經緯度
+                    var latlng = { lat: lat, lng: lng };
+                
+                    // 進行反地理編碼，將經緯度轉換為地址
+                    geocoder.geocode({ 'location': latlng }, function(results, status) {
+                      if (status === 'OK') {
+                        if (results[0]) {
+                          // 將地址顯示在地圖上
+                          var infowindow = new google.maps.InfoWindow({
+                            content: results[0].formatted_address
+                          });
+                          var marker = new google.maps.Marker({
+                            position: latlng,
+                            map: map
+                          });
+                          marker.addListener('click', function() {
+                            infowindow.open(map, marker);
+                          });
+                        } else {
+                          window.alert('找不到地址。');
+                        }
+                      } else {
+                        window.alert('地理編碼失敗，原因：' + status);
+                      }
+                    });
+                  }
+            </script>
+        </div>
+        <div id="g7" class="Grid">
+            <label>chart</label>
+            <div>
+                <select id="g7selew" class="btn">
+                    <option value="Nothing">請選擇</option>
+                    <option value="g7o3">o3</option>
+                    <option value="g7pm10">pm10</option>
+                    <option value="g7pm25">pm25</option>
+                </select>
+            </div>
+            <div class="map" style="background-color: white;display:block;">
+                <canvas id="myChart"></canvas>
+            </div>
+            <script>
+                let labels = [];
+                let data = {
+                    labels:labels,
+                    datasets:[{
+                        label:'',
+                        backgroundColor:'rgb(0,0,255)',
+                        borderColor:'rgb(0,0,255)',
+                        data:[]
+                    }]
+                };
+                let config = {
+                    type:'line',
+                    data:data,
+                    options:{}
+                };
+                let myChart = new Chart(
+                    document.getElementById('myChart'),
+                    config
+                )
+            </script>
+            <script>
+                function g7get(){
+                    const g7url = 'https://api.waqi.info/feed/geo:25.08;121.57/?token=9ec343e01ebbfddc01570f87c8a7bb500724cfe8';
+                    document.getElementById('g7selew').addEventListener('change',()=>{
+                        const selew_val = document.getElementById('g7selew').value
+                        fetch(g7url)
+                            .then(response => response.json())
+                            .then(g7ans => {
+                                const o3 = g7ans.data.forecast.daily.o3;
+                                const pm10 = g7ans.data.forecast.daily.pm10;
+                                const pm25 = g7ans.data.forecast.daily.pm25;
+                                if(selew_val == 'g7o3'){
+                                    const arravg = o3.map(x=>x.avg);
+                                    const arrday = o3.map(x=>x.day);
+                                    const arrna = 'o3'
+                                    updateChart(arravg,arrday,arrna);
+                                }else if(selew_val == 'g7pm10'){
+                                    const arravg = pm10.map(x=>x.avg);
+                                    const arrday = pm10.map(x=>x.day);
+                                    const arrna = 'pm10'
+                                    updateChart(arravg,arrday,arrna);
+                                }else if(selew_val == 'g7pm25'){
+                                    const arravg = pm25.map(x=>x.avg);
+                                    const arrday = pm25.map(x=>x.day);
+                                    const arrna = 'pm25'
+                                    updateChart(arravg,arrday,arrna);
+                                }
+
+                            })
+                    })
+                    
+                }
+                function updateChart(arravg,arrday,name){
+                    myChart.data.labels = arrday;
+                    myChart.data.datasets[0].label = name;
+                    myChart.data.datasets[0].data = arravg;
+                    myChart.update();
+                }
+            </script>
+        </div>
+        <div id="g8" class="Grid">
+            <label>Echart</label>
+            <div>
+                <select id="g8selew" class="btn">
+                    <option value="Nothing">請選擇</option>
+                    <option value="o3">o3</option>
+                    <option value="pm10">pm10</option>
+                    <option value="pm25">pm25</option>
+                </select>
+            </div>
+            <div id="MyEchart" class="map" style="background-color: white;display:block;"></div>
+            <script>
+                let myEchart = new echarts.init(document.getElementById('MyEchart'),'dark');
+                let option ={
+                    title:{
+                        text:''
+                    },
+                    tooltip:{},
+                    legend:{
+                        data:['']
+                    },
+                    xAxis:{
+                        data:[]
+                    },
+                    yAxis:{},
+                    series:{
+                        name:'銷量',
+                        type:'line',
+                        data:[]
+                    }
+                }
+                myEchart.setOption(option);
+            </script>
+            <script>
+                function g8get(){
+                    const g8url = 'https://api.waqi.info/feed/geo:25.08;121.57/?token=9ec343e01ebbfddc01570f87c8a7bb500724cfe8';
+                    document.getElementById('g8selew').addEventListener('change',()=>{
+                        const select_val = document.getElementById('g8selew').value
+                        fetch(g8url)
+                            .then(response => response.json())
+                            .then(ans => {
+                                const o3 = ans.data.forecast.daily.o3;
+                                const pm10 = ans.data.forecast.daily.pm10;
+                                const pm25 = ans.data.forecast.daily.pm25;
+                                if(select_val == 'o3'){
+                                    const arravg = o3.map(x=>x.avg);
+                                    const arrday = o3.map(x=>x.day);
+                                    updateEchart(arravg,arrday,select_val);
+                                }else if(select_val == 'pm10'){
+                                    const arravg = pm10.map(x=>x.avg);
+                                    const arrday = pm10.map(x=>x.day);
+                                    const arrna = 'pm10'
+                                    updateEchart(arravg,arrday,select_val);
+                                }else if(select_val == 'pm25'){
+                                    const arravg = pm25.map(x=>x.avg);
+                                    const arrday = pm25.map(x=>x.day);
+                                    const arrna = 'pm25'
+                                    updateEchart(arravg,arrday,select_val);
+                                }
+
+                            })
+                    })
+                    
+                }
+                function updateEchart(arravg,arrday,select_val){
+                    let option = {
+                        title:{
+                            text:''
+                        },
+                        tooltip:{},
+                        legend:{
+                            data:[select_val]
+                        },
+                        xAxis:{
+                            data:arrday
+                        },
+                        yAxis:{},
+                        series:{
+                            name:select_val,
+                            type:'line',
+                            data:arravg
+                        }
+                    }
+                    myEchart.setOption(option);
+                }
+            </script>
+        </div>
+    </div>
+</body>
+</html>

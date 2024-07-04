@@ -1,0 +1,176 @@
+* {
+    padding: 0px;
+    margin: 0px;
+}
+
+.content {
+    position: relative;
+    z-index: 1;
+    color: white;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+}
+
+.navbar-custom {
+    background-color: #a09f9f;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.navbar-custom .nav-link {
+    color: #000000;
+    font-size: 1rem;
+    height: 50px;
+    padding: 1.5rem;
+    border-radius: 20px;
+    margin: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.navbar-custom .nav-link:hover,
+.navbar-custom .nav-link:focus {
+    color: gold;
+    background-color: purple;
+}
+
+.navbar-custom .nav-link:active {
+    color: #fff;
+    background-color: transparent;
+}
+
+.navbar-custom .nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar-custom .navbar-nav {
+    margin: 0 auto;
+    gap: 20px;
+}
+
+
+.video-player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.banner_taital2 {
+    font-family: "Playwrite SK", cursive;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 5rem;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    margin-bottom: 100px;
+}
+
+.banner_taital {
+    font-family: "Dancing Script", cursive;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 8rem;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    margin-top: 80px;
+}
+
+.mission_section {
+    background: linear-gradient(to right, #f8f9fa85, #e9ecef);
+    padding: 60px 0;
+    text-align: center;
+}
+
+.mission_taital {
+    font-family: "LXGW WenKai TC", cursive;
+    font-weight: 700;
+    font-style: normal;
+    color: #343a40;
+    margin-bottom: 20px;
+    animation: fadeIn 2s ease-in-out;
+    font-size: 5rem;
+}
+
+.mission_text {
+    font-family: "LXGW WenKai TC", cursive;
+    font-weight: 700;
+    font-style: normal;
+    color: #ff00ee;
+    line-height: 1.8;
+    max-width: 800px;
+    margin: 0 auto;
+    animation: fadeInUp 2s ease-in-out;
+    font-size: 3rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.choose_section {
+    padding: 60px 0;
+    text-align: center;
+    background-color: #69696983;
+}
+
+.choose_taital {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.choose_text {
+    font-size: 30px;
+}
+
+.copyright_section {
+    padding: 20px 0;
+    background-color: rgb(52, 58, 64);
+    color: white;
+    text-align: center;
+}
